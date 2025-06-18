@@ -82,7 +82,7 @@ const NetworkSelector = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-pink-200 hover:bg-pink-50">
+        <Button variant="outline" className="border-pink-200 hover:bg-pink-50 glass-button">
           <span className="mr-2 text-lg">{selectedNetwork.logo}</span>
           <span className="hidden sm:inline">{selectedNetwork.name}</span>
           <span className="sm:hidden">{selectedNetwork.nativeCurrency.symbol}</span>
@@ -95,7 +95,7 @@ const NetworkSelector = () => {
             <DropdownMenuItem
               key={network.id}
               onClick={() => switchNetwork(network)}
-              className="flex items-center justify-between p-3 cursor-pointer rounded-md hover:bg-pink-50"
+              className="flex items-center justify-between p-3 cursor-pointer rounded-md hover:bg-white/20"
             >
               <div className="flex items-center space-x-3">
                 <span className="text-lg">{network.logo}</span>

@@ -5,444 +5,903 @@
 /* Vietnamese Lotus Bridge Design System */
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 222.2 84% 4.9%;
 
-    /* Lotus Pink Tones */
-    --primary: 329 73% 60%;
-    --primary-foreground: 0 0% 100%;
+		/* Lotus Pink Tones */
+		--primary: 329 73% 60%;
+		--primary-foreground: 0 0% 100%;
 
-    /* Subtle Vietnamese Green Tones */
-    --secondary: 142 35% 65%;
-    --secondary-foreground: 0 0% 100%;
+		/* Subtle Vietnamese Green Tones */
+		--secondary: 142 35% 65%;
+		--secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+		--muted: 210 40% 96.1%;
+		--muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 329 40% 95%;
-    --accent-foreground: 329 73% 60%;
+		--accent: 329 40% 95%;
+		--accent-foreground: 329 73% 60%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 329 73% 60%;
+		--border: 214.3 31.8% 91.4%;
+		--input: 214.3 31.8% 91.4%;
+		--ring: 329 73% 60%;
 
-    --radius: 0.75rem;
+		--radius: 0.75rem;
 
-    /* Lotus Bridge Custom Colors - Light Mode */
-    --lotus-pink: 329 85% 58%; /* rgb(236, 72, 153) */
-    --lotus-pink-light: 329 70% 70%; /* Lighter variant */
-    --lotus-pink-dark: 329 90% 45%; /* Darker variant */
-    --lotus-green: 160 30% 60%; /* Subtle teal-green */
-    --lotus-green-light: 160 25% 75%; /* Light teal */
-    --lotus-green-dark: 160 35% 45%; /* Dark teal */
-    --lotus-white: 0 0% 100%; /* Pure white */
-    --lotus-cream: 45 50% 98%; /* Warm cream */
-    --dong-son-bronze: 30 50% 55%; /* Refined bronze */
-  }
+		/* Vietnamese cultural colors */
+		--vn-red: 0 100% 50%;
+		--vn-gold: 43 100% 50%;
+		--vn-deep-blue: 222 47% 11%;
 
-  .dark {
-    /* Blueish-black X-inspired color scheme */
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+		/* Lotus-inspired color palette */
+		--lotus-pink: 341 100% 84%;
+		--lotus-deep-pink: 341 85% 65%;
+		--lotus-green: 142 76% 36%;
+		--lotus-deep-green: 142 84% 24%;
+		--lotus-gold: 45 93% 58%;
+		--lotus-red: 0 84% 60%;
+		--lotus-pink-light: 329 70% 70%; /* Lighter variant */
+		--lotus-pink-dark: 329 90% 45%; /* Darker variant */
+		--lotus-green-light: 160 25% 75%; /* Light teal */
+		--lotus-green-dark: 160 35% 45%; /* Dark teal */
+		--lotus-white: 0 0% 100%; /* Pure white */
+		--lotus-cream: 45 50% 98%; /* Warm cream */
+		--dong-son-bronze: 30 50% 55%; /* Refined bronze */
+	}
 
-    --card: 222 84% 5%;
-    --card-foreground: 210 40% 98%;
+	.dark {
+		/* Blueish-black X-inspired color scheme */
+		--background: 222 47% 11%;
+		--foreground: 210 40% 98%;
 
-    --popover: 222 84% 5%;
-    --popover-foreground: 210 40% 98%;
+		--card: 222 84% 5%;
+		--card-foreground: 210 40% 98%;
 
-    --primary: 329 78% 65%;
-    --primary-foreground: 222 84% 5%;
+		--popover: 222 84% 5%;
+		--popover-foreground: 210 40% 98%;
 
-    --secondary: 217 32% 17%;
-    --secondary-foreground: 210 40% 98%;
+		--primary: 329 78% 65%;
+		--primary-foreground: 222 84% 5%;
 
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20.2% 65.1%;
+		--secondary: 217 32% 17%;
+		--secondary-foreground: 210 40% 98%;
 
-    --accent: 217 32% 17%;
-    --accent-foreground: 329 78% 65%;
+		--muted: 217 32% 17%;
+		--muted-foreground: 215 20.2% 65.1%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+		--accent: 217 32% 17%;
+		--accent-foreground: 329 78% 65%;
 
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 329 78% 65%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
 
-    /* Lotus Bridge Custom Colors - Dark Mode */
-    --lotus-pink: 329 78% 65%;
-    --lotus-pink-light: 329 65% 80%;
-    --lotus-pink-dark: 329 90% 55%;
-    --lotus-green: 142 18% 75%;
-    --lotus-green-light: 142 12% 85%;
-    --lotus-green-dark: 142 25% 65%;
-    --lotus-white: 222 47% 11%;
-    --lotus-cream: 217 32% 17%;
-    --dong-son-bronze: 30 55% 65%;
-  }
+		--border: 217 32% 17%;
+		--input: 217 32% 17%;
+		--ring: 329 78% 65%;
+
+		/* Lotus Bridge Custom Colors - Dark Mode */
+		--lotus-pink: 329 78% 65%;
+		--lotus-pink-light: 329 65% 80%;
+		--lotus-pink-dark: 329 90% 55%;
+		--lotus-green: 142 18% 75%;
+		--lotus-green-light: 142 12% 85%;
+		--lotus-green-dark: 142 25% 65%;
+		--lotus-white: 222 47% 11%;
+		--lotus-cream: 217 32% 17%;
+		--dong-son-bronze: 30 55% 65%;
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+	* {
+		@apply border-border;
+	}
 
-  body {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(252, 249, 253, 1) 25%,
-      rgba(249, 245, 255, 1) 50%,
-      rgba(245, 242, 255, 1) 75%,
-      rgba(240, 238, 255, 1) 100%
-    );
-    background-attachment: fixed;
-    color: hsl(var(--foreground));
-    min-height: 100vh;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      sans-serif;
-    position: relative;
-  }
+	body {
+		background: linear-gradient(
+			135deg,
+			rgba(254, 249, 255, 1) 0%,
+			rgba(252, 246, 255, 1) 25%,
+			rgba(249, 242, 255, 1) 50%,
+			rgba(245, 237, 255, 1) 75%,
+			rgba(240, 232, 255, 1) 100%
+		);
+		background-attachment: fixed;
+		color: hsl(var(--foreground));
+		min-height: 100vh;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		position: relative;
+		overflow-x: hidden;
+	}
 
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(
-        circle at 20% 20%,
-        rgba(236, 72, 153, 0.05) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(147, 51, 234, 0.05) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 40% 40%,
-        rgba(59, 130, 246, 0.03) 0%,
-        transparent 50%
-      );
-    pointer-events: none;
-    z-index: -1;
-    /* animation: elegant-float 60s ease-in-out infinite; */
-  }
+	body::before {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: 
+			radial-gradient(
+				circle at 15% 15%,
+				rgba(236, 72, 153, 0.08) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 85% 25%,
+				rgba(147, 51, 234, 0.06) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 25% 85%,
+				rgba(59, 130, 246, 0.04) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 75% 75%,
+				rgba(16, 185, 129, 0.05) 0%,
+				transparent 45%
+			);
+		pointer-events: none;
+		z-index: -1;
+		animation: elegant-float 45s ease-in-out infinite;
+	}
 
-  body.dark {
-    background: linear-gradient(
-      135deg,
-      rgba(15, 15, 23, 1) 0%,
-      rgba(20, 20, 31, 1) 25%,
-      rgba(25, 25, 39, 1) 50%,
-      rgba(30, 30, 47, 1) 75%,
-      rgba(35, 35, 55, 1) 100%
-    );
-    background-attachment: fixed;
-  }
+	body.dark {
+		background: linear-gradient(
+			135deg,
+			rgba(8, 8, 16, 1) 0%,
+			rgba(12, 12, 24, 1) 25%,
+			rgba(16, 16, 32, 1) 50%,
+			rgba(20, 20, 40, 1) 75%,
+			rgba(24, 24, 48, 1) 100%
+		);
+		background-attachment: fixed;
+	}
 
-  body.dark::before {
-    background-image: radial-gradient(
-        circle at 20% 20%,
-        rgba(236, 72, 153, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(147, 51, 234, 0.08) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 40% 40%,
-        rgba(59, 130, 246, 0.05) 0%,
-        transparent 50%
-      );
-  }
+	body.dark::before {
+		background-image: 
+			radial-gradient(
+				circle at 15% 15%,
+				rgba(236, 72, 153, 0.12) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 85% 25%,
+				rgba(147, 51, 234, 0.10) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 25% 85%,
+				rgba(59, 130, 246, 0.08) 0%,
+				transparent 45%
+			),
+			radial-gradient(
+				circle at 75% 75%,
+				rgba(16, 185, 129, 0.07) 0%,
+				transparent 45%
+			);
+	}
 }
 
 @layer components {
-  .lotus-gradient {
-    background: linear-gradient(
-      135deg,
-      rgba(236, 72, 153, 0.9) 0%,
-      rgba(219, 39, 119, 0.9) 50%,
-      rgba(157, 23, 77, 0.9) 100%
-    );
-    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-    transition: all 0.3s ease;
-  }
+	/* .lotus-gradient {
+		background: linear-gradient(
+			135deg,
+			rgba(236, 72, 153, 0.9) 0%,
+			rgba(219, 39, 119, 0.9) 50%,
+			rgba(157, 23, 77, 0.9) 100%
+		);
+		box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+		transition: all 0.3s ease;
+	} */
 
-  .lotus-gradient:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(236, 72, 153, 1) 0%,
-      rgba(219, 39, 119, 1) 50%,
-      rgba(157, 23, 77, 1) 100%
-    );
-    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
-    transform: translateY(-1px);
-  }
+	/* .lotus-gradient:hover {
+		background: linear-gradient(
+			135deg,
+			rgba(236, 72, 153, 1) 0%,
+			rgba(219, 39, 119, 1) 50%,
+			rgba(157, 23, 77, 1) 100%
+		);
+		box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+		transform: translateY(-1px);
+	} */
 
-  .lotus-text-gradient {
-    background: linear-gradient(
-      135deg,
-      rgba(236, 72, 153, 1) 0%,
-      rgba(219, 39, 119, 1) 50%,
-      rgba(157, 23, 77, 1) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
+	.lotus-gradient {
+		background: linear-gradient(
+			135deg,
+			hsl(var(--lotus-pink)) 0%,
+			hsl(var(--lotus-deep-pink)) 50%,
+			hsl(var(--lotus-gold)) 100%
+		);
+	}
 
-  .lotus-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(236, 72, 153, 0.1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
-      0 4px 10px rgba(236, 72, 153, 0.1);
-    transition: all 0.3s ease;
-  }
+	.lotus-text-gradient {
+		background: linear-gradient(
+			135deg,
+			rgba(236, 72, 153, 1) 0%,
+			rgba(219, 39, 119, 1) 50%,
+			rgba(157, 23, 77, 1) 100%
+		);
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
 
-  .lotus-card:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15),
-      0 6px 15px rgba(236, 72, 153, 0.15);
-    transform: translateY(-2px);
-  }
+	.lotus-card {
+		background: rgba(255, 255, 255, 0.85);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-top: 1px solid rgba(255, 255, 255, 0.6);
+		border-left: 1px solid rgba(255, 255, 255, 0.6);
+		box-shadow: 
+			0 8px 32px rgba(0, 0, 0, 0.06),
+			0 4px 16px rgba(236, 72, 153, 0.08),
+			inset 0 1px 0 rgba(255, 255, 255, 0.7);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
+		overflow: hidden;
+	}
 
-  .dark .lotus-card {
-    background: rgba(30, 30, 47, 0.95);
-    border: 1px solid rgba(236, 72, 153, 0.2);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
-      0 4px 10px rgba(236, 72, 153, 0.2);
-  }
+	.lotus-card::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(236, 72, 153, 0.3),
+			transparent
+		);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
 
-  .dong-son-pattern {
-    background-image: radial-gradient(
-        circle at 25% 25%,
-        rgba(219, 39, 119, 0.1) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 75% 75%,
-        hsl(var(--lotus-green) / 0.1) 0%,
-        transparent 50%
-      );
-  }
+	.lotus-card:hover {
+		background: rgba(255, 255, 255, 0.9);
+		box-shadow: 
+			0 12px 40px rgba(0, 0, 0, 0.08),
+			0 6px 20px rgba(236, 72, 153, 0.12),
+			inset 0 1px 0 rgba(255, 255, 255, 0.8);
+		transform: translateY(-3px);
+		border-color: rgba(236, 72, 153, 0.2);
+	}
 
-  .dark .dong-son-pattern {
-    background-image: radial-gradient(
-        circle at 25% 25%,
-        rgba(219, 39, 119, 0.03) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 75% 75%,
-        rgba(59, 130, 246, 0.02) 0%,
-        transparent 50%
-      );
-  }
+	.lotus-card:hover::before {
+		opacity: 1;
+	}
+
+	.dark .lotus-card {
+		background: rgba(15, 15, 35, 0.85);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+		border-left: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: 
+			0 8px 32px rgba(0, 0, 0, 0.4),
+			0 4px 16px rgba(236, 72, 153, 0.15),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	}
+
+	.dark .lotus-card:hover {
+		background: rgba(15, 15, 35, 0.9);
+		box-shadow: 
+			0 12px 40px rgba(0, 0, 0, 0.5),
+			0 6px 20px rgba(236, 72, 153, 0.2),
+			inset 0 1px 0 rgba(255, 255, 255, 0.15);
+		border-color: rgba(236, 72, 153, 0.3);
+	}
+
+	.dong-son-pattern {
+		background-image: radial-gradient(
+				circle at 25% 25%,
+				rgba(219, 39, 119, 0.1) 0%,
+				transparent 50%
+			),
+			radial-gradient(
+				circle at 75% 75%,
+				hsl(var(--lotus-green) / 0.1) 0%,
+				transparent 50%
+			);
+	}
+
+	.dark .dong-son-pattern {
+		background-image: radial-gradient(
+				circle at 25% 25%,
+				rgba(219, 39, 119, 0.03) 0%,
+				transparent 50%
+			),
+			radial-gradient(
+				circle at 75% 75%,
+				rgba(59, 130, 246, 0.02) 0%,
+				transparent 50%
+			);
+	}
 }
 
 /* Lotus Animation Keyframes */
 @keyframes elegant-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.03;
-  }
-  50% {
-    transform: translate(10px, -10px) scale(1.02);
-    opacity: 0.05;
-  }
+	0%, 100% {
+		transform: translate(0, 0) scale(1) rotate(0deg);
+		opacity: 0.03;
+	}
+	25% {
+		transform: translate(8px, -5px) scale(1.01) rotate(90deg);
+		opacity: 0.06;
+	}
+	50% {
+		transform: translate(15px, -12px) scale(1.02) rotate(180deg);
+		opacity: 0.08;
+	}
+	75% {
+		transform: translate(5px, -8px) scale(1.01) rotate(270deg);
+		opacity: 0.05;
+	}
 }
 
 @keyframes lotus-bloom {
-  0% {
-    transform: scale(0.8) rotate(0deg);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.05) rotate(180deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    opacity: 0.9;
-  }
+	0% {
+		transform: scale(0.95) rotate(0deg);
+		opacity: 0.8;
+	}
+	25% {
+		transform: scale(1.02) rotate(90deg);
+		opacity: 0.95;
+	}
+	50% {
+		transform: scale(1.05) rotate(180deg);
+		opacity: 1;
+	}
+	75% {
+		transform: scale(1.02) rotate(270deg);
+		opacity: 0.95;
+	}
+	100% {
+		transform: scale(1) rotate(360deg);
+		opacity: 0.9;
+	}
 }
 
 @keyframes lotus-float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+	0%, 100% {
+		transform: translateY(0px) rotate(0deg);
+	}
+	33% {
+		transform: translateY(-8px) rotate(1deg);
+	}
+	66% {
+		transform: translateY(-12px) rotate(-1deg);
+	}
 }
 
 @keyframes gradient-shift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+	0%, 100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
 }
 
-.lotus-animate {
-  animation: lotus-bloom 3s ease-in-out infinite;
+@keyframes shimmer {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+.lotus-gradient-logo:hover {
+	animation: lotus-bloom 3s ease-in-out;
 }
 
 .lotus-float {
-  animation: lotus-float 4s ease-in-out infinite;
+	animation: lotus-float 6s ease-in-out infinite;
 }
 
 .gradient-animate {
-  background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
+	background-size: 200% 200%;
+	animation: gradient-shift 6s ease infinite;
+}
+
+/* Enhanced Glassmorphism Classes */
+.glass-card {
+	background: rgba(255, 255, 255, 0.12);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 16px;
+	box-shadow: 
+		0 8px 32px rgba(0, 0, 0, 0.08),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glass-button {
+	background: rgba(255, 255, 255, 0.15);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+	background: rgba(255, 255, 255, 0.25);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.glass-input {
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+	background: rgba(255, 255, 255, 0.15);
+	border-color: rgba(236, 72, 153, 0.4);
+	box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.shimmer-effect {
+	position: relative;
+	overflow: hidden;
+}
+
+.shimmer-effect::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.3),
+		transparent
+	);
+	transform: translateX(-100%);
+	animation: shimmer 2s infinite;
 }
 
 /* RainbowKit Custom Theme - Lotus Style */
 [data-rk] {
-  --rk-colors-accentColor: hsl(var(--lotus-pink));
-  --rk-colors-accentColorForeground: hsl(var(--lotus-white));
-  --rk-colors-actionButtonBorder: hsl(var(--border));
-  --rk-colors-actionButtonBorderMobile: hsl(var(--border));
-  --rk-colors-actionButtonSecondaryBackground: hsl(var(--muted));
-  --rk-colors-closeButton: hsl(var(--muted-foreground));
-  --rk-colors-closeButtonBackground: hsl(var(--muted));
-  --rk-colors-connectButtonBackground: linear-gradient(
-    135deg,
-    hsl(var(--lotus-pink)),
-    hsl(var(--lotus-pink-dark))
-  );
-  --rk-colors-connectButtonBackgroundError: hsl(var(--destructive));
-  --rk-colors-connectButtonInnerBackground: hsl(var(--background));
-  --rk-colors-connectButtonText: hsl(var(--lotus-white));
-  --rk-colors-connectButtonTextError: hsl(var(--destructive-foreground));
-  --rk-colors-connectionIndicator: hsl(var(--lotus-green));
-  --rk-colors-downloadBottomCardBackground: linear-gradient(
-    135deg,
-    hsl(var(--lotus-pink-light)),
-    hsl(var(--lotus-cream))
-  );
-  --rk-colors-downloadTopCardBackground: hsl(var(--background));
-  --rk-colors-error: hsl(var(--destructive));
-  --rk-colors-generalBorder: hsl(var(--border));
-  --rk-colors-generalBorderDim: hsl(var(--border));
-  --rk-colors-menuItemBackground: hsl(var(--background));
-  --rk-colors-modalBackdrop: rgba(0, 0, 0, 0.3);
-  --rk-colors-modalBackground: hsl(var(--background));
-  --rk-colors-modalBorder: hsl(var(--border));
-  --rk-colors-modalText: hsl(var(--foreground));
-  --rk-colors-modalTextDim: hsl(var(--muted-foreground));
-  --rk-colors-modalTextSecondary: hsl(var(--muted-foreground));
-  --rk-colors-profileAction: hsl(var(--muted));
-  --rk-colors-profileActionHover: hsl(var(--accent));
-  --rk-colors-profileForeground: hsl(var(--background));
-  --rk-colors-selectedOptionBorder: hsl(var(--lotus-pink));
-  --rk-colors-standby: hsl(var(--muted-foreground));
-  --rk-radii-actionButton: var(--radius);
-  --rk-radii-connectButton: var(--radius);
-  --rk-radii-menuButton: var(--radius);
-  --rk-radii-modal: var(--radius);
-  --rk-radii-modalMobile: var(--radius);
+	--rk-colors-accentColor: hsl(var(--lotus-pink));
+	--rk-colors-accentColorForeground: hsl(var(--lotus-white));
+	--rk-colors-actionButtonBorder: hsl(var(--border));
+	--rk-colors-actionButtonBorderMobile: hsl(var(--border));
+	--rk-colors-actionButtonSecondaryBackground: hsl(var(--muted));
+	--rk-colors-closeButton: hsl(var(--muted-foreground));
+	--rk-colors-closeButtonBackground: hsl(var(--muted));
+	--rk-colors-connectButtonBackground: linear-gradient(
+		135deg,
+		hsl(var(--lotus-pink)),
+		hsl(var(--lotus-pink-dark))
+	);
+	--rk-colors-connectButtonBackgroundError: hsl(var(--destructive));
+	--rk-colors-connectButtonInnerBackground: hsl(var(--background));
+	--rk-colors-connectButtonText: hsl(var(--lotus-white));
+	--rk-colors-connectButtonTextError: hsl(var(--destructive-foreground));
+	--rk-colors-connectionIndicator: hsl(var(--lotus-green));
+	--rk-colors-downloadBottomCardBackground: linear-gradient(
+		135deg,
+		hsl(var(--lotus-pink-light)),
+		hsl(var(--lotus-cream))
+	);
+	--rk-colors-downloadTopCardBackground: hsl(var(--background));
+	--rk-colors-error: hsl(var(--destructive));
+	--rk-colors-generalBorder: hsl(var(--border));
+	--rk-colors-generalBorderDim: hsl(var(--border));
+	--rk-colors-menuItemBackground: hsl(var(--background));
+	--rk-colors-modalBackdrop: rgba(0, 0, 0, 0.3);
+	--rk-colors-modalBackground: hsl(var(--background));
+	--rk-colors-modalBorder: hsl(var(--border));
+	--rk-colors-modalText: hsl(var(--foreground));
+	--rk-colors-modalTextDim: hsl(var(--muted-foreground));
+	--rk-colors-modalTextSecondary: hsl(var(--muted-foreground));
+	--rk-colors-profileAction: hsl(var(--muted));
+	--rk-colors-profileActionHover: hsl(var(--accent));
+	--rk-colors-profileForeground: hsl(var(--background));
+	--rk-colors-selectedOptionBorder: hsl(var(--lotus-pink));
+	--rk-colors-standby: hsl(var(--muted-foreground));
+	--rk-radii-actionButton: var(--radius);
+	--rk-radii-connectButton: var(--radius);
+	--rk-radii-menuButton: var(--radius);
+	--rk-radii-modal: var(--radius);
+	--rk-radii-modalMobile: var(--radius);
 }
 
 /* Custom RainbowKit button styling */
-[data-rk] button[data-testid="rk-connect-button"] {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--lotus-pink)),
-    hsl(var(--lotus-pink-dark))
-  );
-  border: none;
-  color: hsl(var(--lotus-white));
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border-radius: var(--radius);
+[data-rk] button[data-testid='rk-connect-button'] {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--lotus-pink)),
+		hsl(var(--lotus-pink-dark))
+	);
+	border: none;
+	color: hsl(var(--lotus-white));
+	font-weight: 500;
+	transition: all 0.2s ease;
+	border-radius: var(--radius);
 }
 
-[data-rk] button[data-testid="rk-connect-button"]:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+[data-rk] button[data-testid='rk-connect-button']:hover {
+	opacity: 0.9;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Fix for modal positioning issues caused by background animation */
 [data-radix-portal] {
-  z-index: 9999 !important;
-  position: fixed !important;
-  isolation: isolate;
+	z-index: 9999 !important;
+	position: fixed !important;
+	isolation: isolate;
 }
 
-[data-radix-portal] [role="dialog"] {
-  position: fixed !important;
-  z-index: 10000 !important;
-  transform: none !important;
-  isolation: isolate;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
+[data-radix-portal] [role='dialog'] {
+	position: fixed !important;
+	z-index: 10000 !important;
+	transform: none !important;
+	isolation: isolate;
+	left: 50% !important;
+	top: 50% !important;
+	transform: translate(-50%, -50%) !important;
 }
 
 /* Ensure dialog overlays are properly positioned */
 [data-radix-portal] [data-radix-dialog-overlay] {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 9998 !important;
-  background: rgba(0, 0, 0, 0.5);
-  isolation: isolate;
+	position: fixed !important;
+	inset: 0 !important;
+	z-index: 9998 !important;
+	background: rgba(0, 0, 0, 0.5);
+	isolation: isolate;
 }
 
 /* Additional modal fixes */
-[role="dialog"] {
-  will-change: auto !important;
-  transform-origin: center !important;
+[role='dialog'] {
+	will-change: auto !important;
+	transform-origin: center !important;
 }
 
 /* Specific fix for lotus-card dialogs */
-[role="dialog"].lotus-card,
-[role="dialog"] .lotus-card {
-  transform: none !important;
-  position: relative !important;
+[role='dialog'].lotus-card,
+[role='dialog'] .lotus-card {
+	transform: none !important;
+	position: relative !important;
 }
 
 /* Force static positioning for dialog content */
 [data-radix-dialog-content] {
-  position: relative !important;
-  transform: none !important;
+	position: relative !important;
+	transform: none !important;
 }
 
 /* Override any transforms on dialog elements */
 [data-radix-portal] * {
-  transform: none !important;
-  will-change: auto !important;
+	transform: none !important;
+	will-change: auto !important;
 }
 
 /* Stop background animation from affecting modals */
 body:has([data-radix-portal]) {
-  transform: none !important;
+	transform: none !important;
 }
 
 body:has([data-radix-portal])::before {
-  animation: none !important;
-  transform: none !important;
+	animation: none !important;
+	transform: none !important;
 }
+
+/* Custom scrollbar styles for token selector */
+@layer utilities {
+	.scrollbar-thin {
+		scrollbar-width: thin;
+	}
+
+	.scrollbar-thumb-pink-200 {
+		scrollbar-color: rgb(251 207 232) transparent;
+	}
+
+	.scrollbar-track-transparent {
+		scrollbar-track-color: transparent;
+	}
+
+	/* Webkit browsers */
+	.scrollbar-thin::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-thumb {
+		background: rgb(251 207 232);
+		border-radius: 3px;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+		background: rgb(244 164 208);
+	}
+
+	/* Enhanced scrollbar styles for transaction history */
+	.transaction-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: rgb(251 207 232) transparent;
+	}
+
+	.transaction-scroll::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.transaction-scroll::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 10px;
+		margin: 8px 0;
+	}
+
+	.transaction-scroll::-webkit-scrollbar-thumb {
+		background: linear-gradient(
+			135deg,
+			rgb(244 164 208),
+			rgb(251 207 232)
+		);
+		border-radius: 10px;
+		border: 2px solid transparent;
+		background-clip: content-box;
+		transition: all 0.3s ease;
+	}
+
+	.transaction-scroll::-webkit-scrollbar-thumb:hover {
+		background: linear-gradient(
+			135deg,
+			rgb(236 72 153),
+			rgb(244 164 208)
+		);
+	}
+
+	.transaction-scroll::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+}
+
+/* Enhanced Glassmorphism Utility Classes */
+	.glass-subtle {
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.glass-medium {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+	}
+
+	.glass-strong {
+		background: rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.glass-interactive {
+		background: rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.glass-interactive:hover {
+		background: rgba(255, 255, 255, 0.15);
+		border-color: rgba(255, 255, 255, 0.25);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+	}
+
+	.glass-interactive:active {
+		transform: translateY(0);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	}
+
+	/* Dark mode glass effects */
+	.dark .glass-card {
+		background: rgba(0, 0, 0, 0.4);
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.dark .glass-button {
+		background: rgba(255, 255, 255, 0.05);
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.dark .glass-button:hover {
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.dark .glass-input {
+		background: rgba(255, 255, 255, 0.03);
+		border-color: rgba(255, 255, 255, 0.08);
+	}
+
+	.dark .glass-interactive {
+		background: rgba(255, 255, 255, 0.05);
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.dark .glass-interactive:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.2);
+	}
+
+	/* Advanced Glassmorphism for Dialogs */
+	.glass-dialog {
+		background: rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(40px) saturate(180%);
+		-webkit-backdrop-filter: blur(40px) saturate(180%);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 20px;
+		box-shadow: 
+			0 20px 60px rgba(0, 0, 0, 0.15),
+			0 8px 32px rgba(236, 72, 153, 0.1),
+			inset 0 1px 0 rgba(255, 255, 255, 0.4);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.glass-dialog::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.6),
+			transparent
+		);
+		opacity: 0.8;
+	}
+
+	.glass-dialog::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(
+			circle at 50% 0%,
+			rgba(236, 72, 153, 0.1) 0%,
+			transparent 50%
+		);
+		pointer-events: none;
+	}
+
+	/* Enhanced Button Glassmorphism */
+	.glass-button-enhanced {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(20px) saturate(150%);
+		-webkit-backdrop-filter: blur(20px) saturate(150%);
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		box-shadow: 
+			0 8px 24px rgba(0, 0, 0, 0.1),
+			inset 0 1px 0 rgba(255, 255, 255, 0.3);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.glass-button-enhanced::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.2),
+			transparent
+		);
+		transition: left 0.5s ease;
+	}
+
+	.glass-button-enhanced:hover::before {
+		left: 100%;
+	}
+
+	.glass-button-enhanced:hover {
+		background: rgba(255, 255, 255, 0.2);
+		border-color: rgba(236, 72, 153, 0.4);
+		transform: translateY(-2px);
+		box-shadow: 
+			0 12px 32px rgba(0, 0, 0, 0.15),
+			0 4px 16px rgba(236, 72, 153, 0.2),
+			inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	}
+
+	/* Enhanced Input Glassmorphism */
+	.glass-input-enhanced {
+		background: rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(16px) saturate(120%);
+		-webkit-backdrop-filter: blur(16px) saturate(120%);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s ease;
+	}
+
+	.glass-input-enhanced:focus {
+		background: rgba(255, 255, 255, 0.15);
+		border-color: rgba(236, 72, 153, 0.5);
+		box-shadow: 
+			0 0 0 3px rgba(236, 72, 153, 0.1),
+			inset 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.glass-input-enhanced::placeholder {
+		color: rgba(107, 114, 128, 0.8);
+	}
+
+	/* Dialog Animation Enhancements */
+	@keyframes glass-dialog-enter {
+		0% {
+			opacity: 0;
+			transform: scale(0.95) translateY(-10px);
+			backdrop-filter: blur(0px);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1) translateY(0);
+			backdrop-filter: blur(40px);
+		}
+	}
+
+	@keyframes glass-shimmer {
+		0% {
+			transform: translateX(-100%) skewX(-15deg);
+		}
+		100% {
+			transform: translateX(200%) skewX(-15deg);
+		}
+	}
+
+	.glass-dialog {
+		animation: glass-dialog-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	.glass-button-enhanced:hover::before {
+		animation: glass-shimmer 0.8s ease-out;
+	}
+
+	/* Enhanced focus states for accessibility */
+	.glass-input-enhanced:focus-visible {
+		outline: 2px solid rgba(236, 72, 153, 0.6);
+		outline-offset: 2px;
+	}
+
+	.glass-button-enhanced:focus-visible {
+		outline: 2px solid rgba(236, 72, 153, 0.6);
+		outline-offset: 2px;
+	}

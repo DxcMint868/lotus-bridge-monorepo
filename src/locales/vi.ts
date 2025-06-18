@@ -1,0 +1,280 @@
+import { TranslationKeys } from "./en";
+
+export const vi = {
+	// Common
+	common: {
+		loading: "Đang tải...",
+		error: "Lỗi",
+		success: "Thành công",
+		cancel: "Hủy",
+		confirm: "Xác nhận",
+		back: "Quay lại",
+		next: "Tiếp theo",
+		close: "Đóng",
+		copy: "Sao chép",
+		copied: "Đã sao chép",
+		viewOnExplorer: "Xem trên Explorer",
+		connectWallet: "Kết nối ví",
+		disconnect: "Ngắt kết nối",
+		network: "Mạng",
+		balance: "Số dư",
+		amount: "Số lượng",
+		address: "Địa chỉ",
+		transaction: "Giao dịch",
+		fee: "Phí",
+		total: "Tổng",
+		available: "Khả dụng",
+		processing: "Đang xử lý",
+		completed: "Hoàn thành",
+		failed: "Thất bại",
+		pending: "Đang chờ",
+	},
+
+	// Header
+	header: {
+		bridge: "Cầu nối",
+		transactions: "Giao dịch",
+		pools: "Pools",
+		docs: "Tài liệu",
+	},
+
+	// Bridge Interface
+	bridge: {
+		title: "Kết nối tài sản số",
+		subtitle:
+			"Chuyển tài xuyên chuỗi qua nhiều mạng lưới blockchain, kết hợp tinh hoa văn hóa Việt và công nghệ DeFi tiên tiến.",
+		selectNetworksAndTokens:
+			"Chọn mạng và token để cầu nối giữa các blockchain khác nhau",
+		from: "Từ",
+		to: "Đến",
+		amount: "Số lượng",
+		recipient: "Người nhận",
+		youWillReceive: "Bạn sẽ nhận được",
+		sendToConnectedWallet: "Gửi đến ví đã kết nối",
+		enterRecipientAddress: "Nhập địa chỉ người nhận",
+		enterAmount: "Nhập số lượng",
+		selectToken: "Chọn token",
+		selectNetwork: "Chọn mạng",
+		nativeToken: "Token Gốc",
+		nativeTokenDescription: "Tiền tệ gốc của blockchain",
+		vietnameseTokens: "Token Việt Nam",
+		otherTokens: "Token Khác",
+		recommended: "Khuyến nghị",
+		bridgeTokens: "Chuyển xuyên chuỗi",
+		approveTokenFirst: "Phê duyệt Token trước",
+		approvingToken: "Đang phê duyệt...",
+		bridging: "Đang xử lý...",
+		enterValidAmount: "Nhập số lượng hợp lệ",
+		connectWalletToBridge: "Kết nối ví để cầu nối",
+		insufficientBalance: "Số dư không đủ",
+		amountAfterFee:
+			"Số lượng sau phí cầu nối: {{amount}} - {{fee}} = {{result}}",
+		approveTokenForBridge: "Phê duyệt {{token}} cho cầu nối",
+		sourceNetwork: "Mạng nguồn",
+		sourceToken: "Token nguồn",
+		targetNetwork: "Mạng đích",
+		targetToken: "Token đích",
+		balance: "Số dư",
+		loading: "Đang tải...",
+		checkingAllowance: "Đang kiểm tra phép cho...",
+		minimumAmountRequired:
+			"Số lượng tối thiểu yêu cầu: {{amount}} {{token}}",
+		meetsMinimumAmount:
+			"Số lượng đáp ứng yêu cầu tối thiểu ({{amount}} {{token}})",
+		loadingMinimumAmount: "Đang tải số lượng tối thiểu...",
+		selectFromWallet: "Chọn từ ví",
+		selectAccount: "Chọn tài khoản",
+		loadingAccounts: "Đang tải...",
+		noAccountsFound: "Không có tài khoản",
+		connected: "Đã kết nối",
+		selected: "Đã chọn",
+		availableAccounts: "Tài khoản có sẵn",
+		noAccountsAvailable: "Không có tài khoản nào",
+	},
+
+	// Transaction History
+	transaction: {
+		history: "Lịch sử giao dịch",
+		historyDescription:
+			"Theo dõi các giao dịch cầu nối và phê duyệt của bạn",
+		all: "Tất cả",
+		pending: "Đang chờ",
+		completed: "Hoàn thành",
+		failed: "Thất bại",
+		approval: "Phê duyệt",
+		connectWalletToSee: "Kết nối ví để xem lịch sử giao dịch",
+		noTransactions: "Không tìm thấy giao dịch {{filter}}",
+		justNow: "Vừa xong",
+		minutesAgo: "{{minutes}} phút trước",
+		hoursAgo: "{{hours}} giờ trước",
+		daysAgo: "{{days}} ngày trước",
+		fee: "Phí",
+		approvalFor: "Phê duyệt cho {{token}}",
+		to: "Đến",
+		view: "Xem",
+	},
+
+	// Transaction Details
+	transactionDetails: {
+		title: "Chi tiết giao dịch",
+		bridgeType: "Loại cầu nối",
+		lockReleaseBridge: "Cầu nối Lock/Release",
+		bridgeFee: "Phí cầu nối",
+		amountAfterFee: "Số lượng sau phí",
+		estimatedGas: "Gas ước tính",
+		processingTime: "Thời gian xử lý",
+		transactionId: "ID giao dịch",
+		poolLiquidity: "Tính thanh khoản Pool",
+		ofPool: "{{percent}}% của pool",
+		youllReceive: "Bạn sẽ nhận",
+		bridgeRoute: "Lộ trình cầu nối",
+		lockReleasePool: "Pool Lock/Release",
+		enterAmountToSeeDetails: "Nhập số lượng để xem chi tiết giao dịch",
+		fast: "Nhanh",
+		minutes: "{{min}} phút",
+	},
+
+	// Bridge Fees and Pool Stats
+	fees: {
+		fixedBridgeFee: "Phí cầu nối cố định",
+		lockReleaseInfo:
+			"Cầu nối Lock/Release sử dụng phí cố định để chi phí dự đoán được",
+		poolStatus: "Trạng thái Pool",
+		totalBalance: "Số dư tổng",
+		locked: "Đã khóa",
+		feesCollected: "Phí đã thu",
+		checkingAllowance: "Đang kiểm tra phép cho...",
+		poolStatsLoading: "Đang tải thống kê Pool",
+	},
+
+	// Messages and Notifications
+	messages: {
+		approvalSuccessful: "Phê duyệt thành công!",
+		approvalFailed: "Phê duyệt thất bại",
+		bridgeSuccessful: "Cầu nối thành công!",
+		bridgeFailed: "Cầu nối thất bại",
+		pleaseConnectWallet: "Vui lòng kết nối ví trước",
+		pleaseApproveToken: "Vui lòng phê duyệt token trước",
+		transactionPending: "Giao dịch đang chờ...",
+		transactionConfirmed: "Giao dịch đã xác nhận",
+		invalidRecipientAddress: "Địa chỉ người nhận không hợp lệ",
+		amountTooLarge: "Số lượng vượt quá số dư",
+		networkMismatch: "Vui lòng chuyển đến mạng đúng",
+	},
+
+	// Advanced Options
+	advanced: {
+		title: "Tùy chọn nâng cao",
+		slippageTolerance: "Dung sai trượt giá",
+		customRecipient: "Người nhận tùy chỉnh",
+		gasSettings: "Cài đặt Gas",
+		standard: "Tiêu chuẩn",
+		fast: "Nhanh",
+		instant: "Tức thì",
+	},
+
+	// Wallet Connection
+	wallet: {
+		connectWallet: "Kết nối ví",
+		connecting: "Đang kết nối...",
+		connected: "Đã kết nối",
+		disconnected: "Đã ngắt kết nối",
+		wrongNetwork: "Mạng sai",
+		switchNetwork: "Chuyển mạng",
+		accountAddress: "Địa chỉ tài khoản",
+		walletBalance: "Số dư ví",
+		copyAddress: "Sao chép địa chỉ",
+		addressCopied: "Địa chỉ đã được sao chép vào clipboard",
+		status: "Trạng thái ví",
+		connectToSeeInfo: "Kết nối ví để xem thông tin blockchain",
+		connectionStatus: "Trạng thái",
+		address: "Địa chỉ",
+		network: "Mạng",
+		balance: "Số dư",
+		refreshBalance: "Làm mới số dư",
+	},
+
+	// Token Selector
+	tokens: {
+		selectToken: "Chọn Token",
+		searchTokens: "Tìm kiếm token",
+		popularTokens: "Token phổ biến",
+		allTokens: "Tất cả Token",
+		tokenNotFound: "Không tìm thấy token",
+		customToken: "Token tùy chỉnh",
+		addCustomToken: "Thêm Token tùy chỉnh",
+		tokenAddress: "Địa chỉ Token",
+		tokenSymbol: "Ký hiệu Token",
+		tokenDecimals: "Số thập phân Token",
+	},
+
+	// Network Selector
+	networks: {
+		selectNetwork: "Chọn mạng",
+		mainnet: "Mainnet",
+		testnet: "Testnet",
+		ethereum: "Ethereum",
+		base: "Base",
+		polygon: "Polygon",
+		optimism: "Optimism",
+		arbitrum: "Arbitrum",
+		switchToNetwork: "Chuyển đến {{network}}",
+	},
+
+	// Transaction History
+	history: {
+		title: "Lịch sử giao dịch",
+		noTransactions: "Không tìm thấy giao dịch",
+		viewAll: "Xem tất cả",
+		recent: "Gần đây",
+		pending: "Đang chờ",
+		completed: "Hoàn thành",
+		failed: "Thất bại",
+		bridgeFrom: "Cầu nối từ {{from}} đến {{to}}",
+		amount: "{{amount}} {{token}}",
+		hash: "Hash",
+		status: "Trạng thái",
+		time: "Thời gian",
+		refresh: "Làm mới",
+	},
+
+	// Footer
+	footer: {
+		poweredBy: "Được hỗ trợ bởi Lotus Bridge",
+		version: "Phiên bản {{version}}",
+		documentation: "Tài liệu",
+		support: "Hỗ trợ",
+		terms: "Điều khoản dịch vụ",
+		privacy: "Chính sách bảo mật",
+		community: "Cộng đồng",
+	},
+
+	// Errors
+	errors: {
+		networkError: "Đã xảy ra lỗi mạng",
+		contractError: "Lỗi hợp đồng",
+		userRejected: "Người dùng từ chối giao dịch",
+		insufficientGas: "Gas không đủ",
+		transactionFailed: "Giao dịch thất bại",
+		invalidAddress: "Địa chỉ không hợp lệ",
+		invalidAmount: "Số lượng không hợp lệ",
+		tokenNotSupported: "Token không được hỗ trợ",
+		bridgeNotAvailable: "Cầu nối không khả dụng",
+		liquidityInsufficient: "Thanh khoản không đủ",
+		unknown: "Đã xảy ra lỗi không xác định",
+	},
+
+	// Debug Info
+	debug: {
+		validParams: "Thông số hợp lệ",
+		needsApproval: "Cần phê duyệt",
+		allowanceLoading: "Đang tải phép cho",
+		poolStatsLoading: "Đang tải thống kê Pool",
+		transactionId: "ID giao dịch",
+		bridgeFee: "Phí cầu nối",
+		notGenerated: "Chưa tạo",
+		notCalculated: "Chưa tính toán",
+		yes: "Có",
+		no: "Không",
+	},
+};

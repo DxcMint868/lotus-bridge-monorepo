@@ -4,51 +4,175 @@
 		"chainName": "Base Sepolia",
 		"isTestnet": true,
 		"chainIcon": "/chain-icons/base.png",
-		"lzEndpointID": 10245,
-		"lzEndpointContract": "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8",
-		"tokenBridges": [
-			{
-				"innerTokenAddress": "0x51119AEF407Dc28e13aFD5e11E93Ae0d29EFbf51",
-				"ProxyOFTAddress": "0xf5C7d595B59c010D15A10EeB56fE3697d2475566",
-				"tokenName": "Vietnam Stable Coin",
-				"tokenSymbol": "VNST",
-				"tokenDecimals": 8,
-				"icon": "/token-icons/vnst.png"
+		"bridgeFee": "1000000",
+		"bridgeFactoryContract": "0xe77aCC776B9a8ff6b2A313330C7b5Ad10abEBB06",
+		"Pool Setup Contract": "0xdDDCFB4e7c327cc9f4BA7C17E0D30e63E7BD65c6",
+		"uniswapV3FactoryContract": "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
+		"positionManagerContract": "0x27F971cb582BF9E50F397e4d29a5C7A34f11faA2",
+		"swapRouterContract": "0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4",
+		"quoterV2Contract": "0xC5290058841028F1614F3A6F0F5816cAd0df5E27",
+		"swapBridgeContract": "0x396aa87BD4afBe1Bc4eebd5F420c45EABD110C0E",
+		"simpleSwapBridgeContract": "0xBD1f0aFf88a336765d5C9AA0363Ebd848B668dd6",
+		"tokens": {
+			"AXS": {
+				"address": "0xA0636375D1a93eB4998aE9a586ACE3CC664461ce",
+				"image": "/token-icons/axs.png",
+				"name": "Axie Infinity Shard",
+				"decimals": 18
 			},
-			{
-				"innerTokenAddress": "",
-				"ProxyOFTAddress": "",
-				"tokenName": "USD Tether",
-				"tokenSymbol": "USDT",
-				"tokenDecimals": 8,
-				"icon": "/token-icons/usdt.svg"
+			"SLP": {
+				"address": "0x227F7903FF9DA3034B73E4D3a13d2bb91706D095",
+				"image": "/token-icons/slp.png",
+				"name": "Smooth Love Potion",
+				"decimals": 18
+			},
+			"VNST": {
+				"address": "0x2d11eE653b8Dae37fBcF7544c0d9576ab6811C36",
+				"image": "/token-icons/vnst.png",
+				"name": "VN Stable",
+				"decimals": 18
+			},
+			"USDT": {
+				"address": "0x0000000000000000000000000000000000000000",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 18
+			},
+			"VNDC": {
+				"address": "0x4322BCC65D98B0896ebe0Dd2Aff0c570890c22c6",
+				"image": "/token-icons/vndc.png",
+				"name": "VN Digital Coin",
+				"decimals": 18
+			},
+			"A8": {
+				"address": "0xD00DcAd45ac6dE6557029771a831df82F6FB1506",
+				"image": "/token-icons/a8.png",
+				"name": "A8 Token",
+				"decimals": 18
+			},
+			"SIPHER": {
+				"address": "0x1C94923e5Dc2c859f0e74BC551E3BF9B56de256c",
+				"image": "/token-icons/sipher.png",
+				"name": "Sipher Token",
+				"decimals": 18
+			},
+			"C98": {
+				"address": "0xCF8f373E37eAcFb7F7a04F1EC465386c012cA9bD",
+				"image": "/token-icons/c98.png",
+				"name": "Coin98",
+				"decimals": 18
+			},
+			"KNC": {
+				"address": "0xa445BbDF9916bB80eEDFCAE1A698191ef082F3C7",
+				"image": "/token-icons/knc.png",
+				"name": "Kyber Network Crystal",
+				"decimals": 18
+			},
+			"KAI": {
+				"address": "0x611E5CFB66505354C793a48e5CDc4dbD89634EC2",
+				"image": "/token-icons/kai.png",
+				"name": "KardiaChain",
+				"decimals": 18
 			}
-		]
+		},
+		"liquidityPools": {
+			"AXS": "0xa4a23e61fA25f4487F46dcbBE98F87a70DF6cE7e",
+			"SLP": "0xE5855571f00e0F38a78bFe1EB099d202F3bBEE3D",
+			"VNST": "0x3e8c27c90b51ec522D8C6dBB75204f759d4DD29F",
+			"VNDC": "0xb1522ad17A5f252ef8a233C912e6b5F001C48A13",
+			"A8": "0xa5Fa653c177075e21B935B37bE1bC480caB2592c",
+			"SIPHER": "0x3DFBE79233e438012bD37a56074c33AC21e53c68",
+			"C98": "0x54B92CBF388E04fD1F90283E65D033c83f6677dB",
+			"KNC": "0x76b09E78D6d443B87a79A547ecC32BCA50058ce1",
+			"KAI": "0x9f4FdE1f10d7d7ec2724787db7457d4dce53b444"
+		}
 	},
 	"11155111": {
 		"chainId": 11155111,
 		"chainName": "Ethereum Sepolia",
 		"isTestnet": true,
 		"chainIcon": "/chain-icons/ethereum.png",
-		"lzEndpointID": 10161,
-		"lzEndpointContract": "0xae92d5aD7583AD66E49A0c67BAd18F6ba52dDDc1",
-		"tokenBridges": [
-			{
-				"innerTokenAddress": "0xca7ED9Ca8015bbDdd070A83DC78323535004772f",
-				"ProxyOFTAddress": "0x63B0df23C87305483748FF85fDf7EfE16b017739",
-				"tokenName": "Vietnam Stable Coin",
-				"tokenSymbol": "VNST",
-				"tokenDecimals": 8,
-				"icon": "/token-icons/vnst.png"
+		"bridgeFee": "1000000",
+		"bridgeFactoryContract": "0xE8CcfF76c6215af5A75Bd391b5bA3d4A8cacEf0D",
+		"poolSetupContract": "0x694CD95ab8795Ae44eDd01D81c196EA6cE564462",
+		"swapRouterContract": "0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4",
+		"positionManagerContract": "0x27F971cb582BF9E50F397e4d29a5C7A34f11faA2",
+		"uniswapV3FactoryContract": "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
+		"quoterV2Contract": "0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3",
+		"swapBridgeContract": "0x9565f1964ec62A0d7af8a527AcfBAAC159162C9C",
+		"simpleSwapBridgeContract": "0xf5Fcb378C522d372BD050b4e3D0d65F7Fe72F081",
+		"tokens": {
+			"AXS": {
+				"address": "0x4faBa27A73DD517db50945c2F02621eba3959B1E",
+				"image": "/token-icons/axs.png",
+				"name": "Axie Infinity Shard",
+				"decimals": 18
 			},
-			{
-				"innerTokenAddress": "",
-				"ProxyOFTAddress": "",
-				"tokenName": "USD Tether",
-				"tokenSymbol": "USDT",
-				"tokenDecimals": 8,
-				"icon": "/token-icons/usdt.svg"
+			"SLP": {
+				"address": "0x17194dA767007572FCb0fAdB48f9BD3DAd314c19",
+				"image": "/token-icons/slp.png",
+				"name": "Smooth Love Potion",
+				"decimals": 18
+			},
+			"VNST": {
+				"address": "0xBF00AB3f7C2c15eCA16a2f58d682B92BcBe78e4B",
+				"image": "/token-icons/vnst.png",
+				"name": "VN Stable",
+				"decimals": 18
+			},
+			"USDT": {
+				"address": "0x0000000000000000000000000000000000000000",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 18
+			},
+			"VNDC": {
+				"address": "0x322D132a837468342Cba668e473497D6B61A6854",
+				"image": "/token-icons/vndc.png",
+				"name": "VN Digital Coin",
+				"decimals": 18
+			},
+			"A8": {
+				"address": "0xFd3ACA875894a448c39EE9bBdc5Ea7102De4CFF4",
+				"image": "/token-icons/a8.png",
+				"name": "A8 Token",
+				"decimals": 18
+			},
+			"SIPHER": {
+				"address": "0x3432269A1Effc63390cbe6889c2B5BE23b73eD76",
+				"image": "/token-icons/sipher.png",
+				"name": "Sipher Token",
+				"decimals": 18
+			},
+			"C98": {
+				"address": "0x10263EB9Bd57266feC38548cCd02D9d656eB83De",
+				"image": "/token-icons/c98.png",
+				"name": "Coin98",
+				"decimals": 18
+			},
+			"KNC": {
+				"address": "0x8bAef75f951E789136046e7CBd5eB164D35169D6",
+				"image": "/token-icons/knc.png",
+				"name": "Kyber Network Crystal",
+				"decimals": 18
+			},
+			"KAI": {
+				"address": "DEPLOY_TOKEN_HERE",
+				"image": "/token-icons/kai.png",
+				"name": "KardiaChain",
+				"decimals": 18
 			}
-		]
+		},
+		"liquidityPools": {
+			"AXS": "0x74C343f4f72e77FA6110A10693F2c0F6dBe71a66",
+			"SLP": "0xd4e7B95a3a13CAAF384A71d78E1BF17b030aA817",
+			"VNST": "0xF5e815eC423b237F81bC8Af4f80A9311F02e8D33",
+			"VNDC": "0x9c0d6604e69AABAd833e271074317c790e2DbCFa",
+			"A8": "0xda4dBcE5D9ae44AE05F0fF458EE370996cc4105B",
+			"SIPHER": "0x29550Dc7a72A380333c25D8A050e0B96efe965FF",
+			"C98": "0xdA1548bbE9e16636025b3b1D44383ebBB46a82B2",
+			"KNC": "0x6C8B5795C4bF51E2f32CBc331C7dE0f2C6Cd567E",
+			"KAI": "0xa15faD49027100a8957463Ac1E29Be724670419f"
+		}
 	}
 }

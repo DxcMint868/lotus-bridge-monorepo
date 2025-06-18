@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 const WalletConnection = () => {
+  const { t } = useTranslation();
+  
   return (
     <ConnectButton.Custom>
       {({
@@ -43,7 +46,7 @@ const WalletConnection = () => {
                     type="button"
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 lotus-gradient hover:opacity-90 text-white"
                   >
-                    Connect Wallet
+                    {t('wallet.connectWallet')}
                   </button>
                 );
               }
@@ -55,7 +58,7 @@ const WalletConnection = () => {
                     type="button"
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-red-500 hover:bg-red-600 text-white"
                   >
-                    Wrong network
+                    {t('wallet.wrongNetwork')}
                   </button>
                 );
               }
@@ -75,7 +78,7 @@ const WalletConnection = () => {
                     type="button"
                     className="lotus-gradient hover:opacity-90 text-white px-4 py-2 rounded-md text-sm transition-colors"
                   >
-                    <span className="hidden sm:inline">Connected</span>
+                    <span className="hidden sm:inline">{t('wallet.connected')}</span>
                     <span className="sm:hidden">•••</span>
                   </button>
                 </div>

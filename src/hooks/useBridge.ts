@@ -6,7 +6,13 @@ import {
 	useBalance,
 	useReadContract,
 } from "wagmi";
-import { parseUnits, formatUnits, Address } from "viem";
+import {
+	parseUnits,
+	formatUnits,
+	Address,
+	keccak256,
+	encodePacked,
+} from "viem";
 import {
 	sepolia,
 	baseSepolia,
@@ -16,84 +22,74 @@ import {
 	optimism,
 	arbitrum,
 } from "wagmi/chains";
-import { getChainByKey, getTokenBySymbol, ChainToken } from "@/lib/chains";
+import {
+	getChainByKey,
+	getTokenBySymbol,
+	getTokenBridgeAddresses,
+	getTokenDecimals,
+} from "@/lib/chains";
 
-// ProxyOFT Contract ABI - only the functions we need
-const PROXY_OFT_ABI = [
+// BridgeFactory Contract ABI - for Lock/Release bridge
+const BRIDGE_FACTORY_ABI = [
 	{
 		inputs: [
-			{ internalType: "address", name: "_from", type: "address" },
-			{ internalType: "uint16", name: "_dstChainId", type: "uint16" },
-			{ internalType: "bytes32", name: "_toAddress", type: "bytes32" },
-			{ internalType: "uint256", name: "_amount", type: "uint256" },
-			{ internalType: "uint256", name: "_minAmount", type: "uint256" },
-			{
-				components: [
-					{
-						internalType: "address",
-						name: "refundAddress",
-						type: "address",
-					},
-					{
-						internalType: "address",
-						name: "zroPaymentAddress",
-						type: "address",
-					},
-					{
-						internalType: "bytes",
-						name: "adapterParams",
-						type: "bytes",
-					},
-				],
-				internalType:
-					"struct ILayerZeroUserApplicationConfig.LzCallParams",
-				name: "_callParams",
-				type: "tuple",
-			},
+			{ internalType: "address", name: "token", type: "address" },
+			{ internalType: "uint256", name: "amount", type: "uint256" },
+			{ internalType: "uint256", name: "targetChain", type: "uint256" },
+			{ internalType: "address", name: "recipient", type: "address" },
 		],
-		name: "sendFrom",
+		name: "reqBridge",
 		outputs: [],
-		stateMutability: "payable",
+		stateMutability: "nonpayable",
 		type: "function",
 	},
 	{
-		inputs: [
-			{ internalType: "uint16", name: "_dstChainId", type: "uint16" },
-			{ internalType: "bytes32", name: "_toAddress", type: "bytes32" }, // Changed from bytes to bytes32
-			{ internalType: "uint256", name: "_amount", type: "uint256" },
-			{ internalType: "bool", name: "_useZro", type: "bool" },
-			{ internalType: "bytes", name: "_adapterParams", type: "bytes" },
-		],
-		name: "estimateSendFee",
-		outputs: [
-			{ internalType: "uint256", name: "nativeFee", type: "uint256" },
-			{ internalType: "uint256", name: "zroFee", type: "uint256" },
-		],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [
-			{ internalType: "uint16", name: "_dstChainId", type: "uint16" },
-		],
-		name: "minDstGasLookup",
+		inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+		name: "estimateFee",
 		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
 		stateMutability: "view",
 		type: "function",
 	},
 	{
-		inputs: [
-			{ internalType: "uint16", name: "_dstChainId", type: "uint16" },
-			{ internalType: "uint16", name: "_type", type: "uint16" },
-		],
-		name: "minDstGasLookup",
+		inputs: [{ internalType: "address", name: "token", type: "address" }],
+		name: "getLPAddress",
+		outputs: [{ internalType: "address", name: "", type: "address" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "address", name: "token", type: "address" }],
+		name: "isTokenSupported",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "address", name: "token", type: "address" }],
+		name: "getMinBridgeAmount",
 		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
 		stateMutability: "view",
 		type: "function",
 	},
 ] as const;
 
-// ERC20 ABI for approval
+// LiquidityPool Contract ABI - for getting stats only
+const LIQUIDITY_POOL_ABI = [
+	{
+		inputs: [],
+		name: "getStats",
+		outputs: [
+			{ internalType: "uint256", name: "balance", type: "uint256" },
+			{ internalType: "uint256", name: "locked", type: "uint256" },
+			{ internalType: "uint256", name: "fees", type: "uint256" },
+			{ internalType: "uint256", name: "available", type: "uint256" },
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+] as const;
+
+// ERC20 ABI for approval and transfers
 const ERC20_ABI = [
 	{
 		inputs: [
@@ -111,6 +107,23 @@ const ERC20_ABI = [
 			{ internalType: "address", name: "spender", type: "address" },
 		],
 		name: "allowance",
+		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{ internalType: "address", name: "to", type: "address" },
+			{ internalType: "uint256", name: "amount", type: "uint256" },
+		],
+		name: "transfer",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "address", name: "account", type: "address" }],
+		name: "balanceOf",
 		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
 		stateMutability: "view",
 		type: "function",
@@ -141,11 +154,9 @@ export interface BridgeResult {
 	approvalError: Error | null;
 	approvalTxHash: string | undefined;
 
-	// Fee estimation
-	estimatedFee: bigint | null;
-	estimatedFeeFormatted: string;
-	isFeeLoading: boolean;
-	feeError: Error | null;
+	// Bridge fee (simple fixed fee for Lock/Release bridge)
+	bridgeFee: bigint;
+	bridgeFeeFormatted: string;
 
 	// Allowance checking
 	needsApproval: boolean;
@@ -153,11 +164,27 @@ export interface BridgeResult {
 	isAllowanceLoading: boolean;
 	allowanceError: Error | null;
 
+	// Pool statistics
+	poolStats: {
+		balance: bigint;
+		locked: bigint;
+		fees: bigint;
+		available: bigint;
+	} | null;
+	isPoolStatsLoading: boolean;
+
+	// Minimum bridge amount validation
+	minBridgeAmount: bigint | null;
+	minBridgeAmountFormatted: string;
+	isMinAmountLoading: boolean;
+	meetsMinimumAmount: boolean;
+
 	// Helper data
 	fromChain: any;
 	toChain: any;
 	token: any;
 	isValidParams: boolean;
+	transactionId: string | null;
 }
 
 export const useBridge = (params: BridgeParams): BridgeResult => {
@@ -185,10 +212,39 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 		}
 	};
 
-	// Helper function to convert address to bytes32
-	const addressToBytes32 = (address: string): `0x${string}` => {
-		return `0x${address.slice(2).padStart(64, "0")}` as `0x${string}`;
-	};
+	// Generate unique transaction ID
+	const generateTransactionId = useCallback(
+		(
+			fromChainId: number,
+			toChainId: number,
+			sender: string,
+			recipient: string,
+			amount: bigint,
+			timestamp: number
+		): `0x${string}` => {
+			return keccak256(
+				encodePacked(
+					[
+						"uint256",
+						"uint256",
+						"address",
+						"address",
+						"uint256",
+						"uint256",
+					],
+					[
+						BigInt(fromChainId),
+						BigInt(toChainId),
+						sender as Address,
+						recipient as Address,
+						amount,
+						BigInt(timestamp),
+					]
+				)
+			);
+		},
+		[]
+	);
 
 	// Memoize derived data from params
 	const fromChain = useMemo(() => {
@@ -217,41 +273,49 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 		);
 	}, [params, fromChain, toChain, token, address]);
 
-	// Prepare transaction data
-	const {
-		amount,
-		recipientAddress,
-		toAddressBytes,
-		gasLimit,
-		adapterParams,
-	} = useMemo(() => {
-		if (!isValidParams || !params || !token) {
+	// Calculate bridge fee and amounts - using BridgeFactory estimated fee
+	const { totalAmount, recipientAddress, transactionId } = useMemo(() => {
+		if (!isValidParams || !token || !fromChain || !toChain) {
 			return {
-				amount: null,
+				totalAmount: null,
 				recipientAddress: null,
-				toAddressBytes: null,
-				gasLimit: 1000000,
-				adapterParams: "0x" as `0x${string}`,
+				transactionId: null,
 			};
 		}
 
-		const amount = parseUnits(params.amount, token.tokenDecimals);
-		const recipientAddress = params.recipient || address;
-		const toAddressBytes = addressToBytes32(recipientAddress!);
-		const gasLimit = 1000000;
+		// Get token decimals from configuration, fallback to 18
+		const tokenDecimals =
+			getTokenDecimals(fromChain.chainId, params.tokenSymbol) || 18;
 
-		// Create proper adapter params for LayerZero v2
-		const gasLimitHex = gasLimit.toString(16).padStart(64, "0");
-		const adapterParams = `0x0001${gasLimitHex}` as `0x${string}`;
+		// For BridgeFactory, we pass the total amount and let the contract handle fee calculation
+		const totalAmount = parseUnits(params.amount, tokenDecimals);
+		const recipientAddress = params.recipient || address;
+		const timestamp = Math.floor(Date.now() / 1000);
+
+		const transactionId = generateTransactionId(
+			fromChain.chainId,
+			toChain.chainId,
+			address!,
+			recipientAddress!,
+			totalAmount,
+			timestamp
+		);
 
 		return {
-			amount,
+			totalAmount,
 			recipientAddress,
-			toAddressBytes,
-			gasLimit,
-			adapterParams,
+			transactionId,
 		};
-	}, [isValidParams, params, token, address]);
+	}, [
+		isValidParams,
+		token,
+		fromChain,
+		toChain,
+		params.amount,
+		params.recipient,
+		address,
+		generateTransactionId,
+	]);
 
 	// Bridge transaction hooks
 	const {
@@ -285,66 +349,116 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 	const isLoading = isWritePending || isConfirming;
 	const isApproving = isApprovalPending || isApprovalConfirming;
 
-	// Fee estimation using wagmi
-	const {
-		data: feeData,
-		isLoading: isFeeLoading,
-		error: feeError,
-	} = useReadContract({
-		address: token.ProxyOFTAddress as Address,
-		abi: PROXY_OFT_ABI,
-		functionName: "estimateSendFee",
-		args:
-			toAddressBytes && toChain
-				? [
-						toChain.lzEndpointID,
-						toAddressBytes,
-						amount || 0n,
-						false, // not use ZRO, use native
-						adapterParams,
-				  ]
-				: undefined,
+	// Estimated bridge fee from BridgeFactory
+	const { data: estimatedFeeData } = useReadContract({
+		address: fromChain?.bridgeFactoryContract as Address,
+		abi: BRIDGE_FACTORY_ABI,
+		functionName: "estimateFee",
+		args: totalAmount ? [totalAmount] : undefined,
 		query: {
-			enabled: isValidParams && !!toAddressBytes && !!toChain && !!amount,
+			enabled: !!fromChain?.bridgeFactoryContract && !!totalAmount,
+			refetchInterval: 30000, // Refetch every 30 seconds
 		},
 	});
 
-	const estimatedFee = feeData ? feeData[0] : null; // nativeFee
-	const estimatedFeeFormatted = estimatedFee
-		? formatUnits(estimatedFee, 18)
+	// Pool statistics from LiquidityPool
+	const { data: poolStatsData, isLoading: isPoolStatsLoading } =
+		useReadContract({
+			address: token?.liquidityPoolAddress as Address,
+			abi: LIQUIDITY_POOL_ABI,
+			functionName: "getStats",
+			query: {
+				enabled: !!token?.liquidityPoolAddress,
+				refetchInterval: 30000, // Refetch every 30 seconds
+			},
+		});
+
+	const poolStats = poolStatsData
+		? {
+				balance: poolStatsData[0],
+				locked: poolStatsData[1],
+				fees: poolStatsData[2],
+				available: poolStatsData[3],
+		  }
+		: null;
+
+	// Token decimals calculation
+	const tokenDecimals =
+		fromChain && params.tokenSymbol
+			? getTokenDecimals(fromChain.chainId, params.tokenSymbol) || 18
+			: 18;
+
+	// Minimum bridge amount from BridgeFactory
+	const { data: minBridgeAmountData, isLoading: isMinAmountLoading } =
+		useReadContract({
+			address: fromChain?.bridgeFactoryContract as Address,
+			abi: BRIDGE_FACTORY_ABI,
+			functionName: "getMinBridgeAmount",
+			args: token?.tokenAddress
+				? [token.tokenAddress as Address]
+				: undefined,
+			query: {
+				enabled:
+					!!fromChain?.bridgeFactoryContract && !!token?.tokenAddress,
+				refetchInterval: 30000, // Refetch every 30 seconds
+			},
+		});
+
+	const minBridgeAmount = minBridgeAmountData || null;
+	const minBridgeAmountFormatted = minBridgeAmount
+		? formatUnits(minBridgeAmount, tokenDecimals)
 		: "0";
 
-	// Allowance checking using wagmi
+	// Check if current amount meets minimum requirement
+	const meetsMinimumAmount = useMemo(() => {
+		if (!minBridgeAmount || !totalAmount || !isValidParams) return false; // Default to true if no minimum set
+		return totalAmount >= minBridgeAmount;
+	}, [minBridgeAmount, totalAmount, isValidParams]);
+
+	// Allowance checking - approve BridgeFactory contract
 	const {
 		data: currentAllowance,
 		isLoading: isAllowanceLoading,
 		error: allowanceError,
 	} = useReadContract({
-		address: token?.innerTokenAddress as Address,
+		address: token?.tokenAddress as Address,
 		abi: ERC20_ABI,
 		functionName: "allowance",
 		args:
-			address && token?.ProxyOFTAddress
-				? [address, token.ProxyOFTAddress as Address]
+			address && fromChain?.bridgeFactoryContract
+				? [address, fromChain.bridgeFactoryContract as Address]
 				: undefined,
 		query: {
 			enabled:
 				isValidParams &&
 				!!address &&
-				!!token?.innerTokenAddress &&
-				!!token?.ProxyOFTAddress,
+				!!token?.tokenAddress &&
+				!!fromChain?.bridgeFactoryContract,
 			refetchInterval: 10000, // Refetch every 10 seconds
 		},
 	});
 
 	const needsApproval = useMemo(() => {
-		if (!currentAllowance || !amount || !isValidParams) return true;
-		return currentAllowance < amount;
-	}, [currentAllowance, amount, isValidParams]);
+		if (!currentAllowance || !totalAmount || !isValidParams) return true;
+		console.log("Current allowance:", currentAllowance.toString());
+		console.log("Total amount:", totalAmount.toString());
+		return currentAllowance < totalAmount;
+	}, [currentAllowance, totalAmount, isValidParams]);
 
-	// Approve tokens for the bridge contract
+	// Bridge fee calculation
+	const bridgeFee = estimatedFeeData || BigInt(0);
+	const bridgeFeeFormatted = bridgeFee
+		? formatUnits(bridgeFee, tokenDecimals)
+		: "0";
+
+	// Approve tokens for the BridgeFactory contract
 	const approveToken = useCallback(() => {
-		if (!isValidParams || !token || !address) {
+		if (
+			!isValidParams ||
+			!token ||
+			!address ||
+			!fromChain?.bridgeFactoryContract
+		) {
 			console.error("Invalid params for approval");
 			return;
 		}
@@ -361,24 +475,23 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 		);
 
 		writeApproval({
-			address: token.innerTokenAddress as Address,
+			address: token.tokenAddress as Address,
 			abi: ERC20_ABI,
 			functionName: "approve",
-			args: [token.ProxyOFTAddress as Address, maxAllowance],
+			args: [fromChain.bridgeFactoryContract as Address, maxAllowance],
 			chain: wagmiChain,
 			account: address,
 		});
 	}, [isValidParams, token, address, fromChain, writeApproval]);
 
-	// Execute bridge transaction
+	// Execute bridge transaction using BridgeFactory
 	const bridge = useCallback(() => {
 		if (
 			!isValidParams ||
-			!params ||
 			!token ||
 			!address ||
-			!amount ||
-			!toAddressBytes
+			!totalAmount ||
+			!fromChain?.bridgeFactoryContract
 		) {
 			console.error("Invalid params for bridge");
 			return;
@@ -390,59 +503,43 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 			return;
 		}
 
-		const lzCallParams = {
-			refundAddress: address,
-			zroPaymentAddress:
-				"0x0000000000000000000000000000000000000000" as `0x${string}`,
-			adapterParams,
-		};
-
-		// Calculate minimum amount (95% of amount to account for slippage)
-		const minAmount = (amount * BigInt(95)) / BigInt(100);
-		const finalMinAmount = minAmount > 0n ? minAmount : 1n;
+		const tokenDecimals =
+			getTokenDecimals(fromChain.chainId, params.tokenSymbol) || 18;
 
 		console.log("Bridge transaction details:", {
-			tokenAddress: token.innerTokenAddress,
-			proxyOFTAddress: token.ProxyOFTAddress,
-			amount: amount.toString(),
-			minAmount: finalMinAmount.toString(),
-			amountFormatted: formatUnits(amount, token.tokenDecimals),
-			toChainLzEndpointID: toChain!.lzEndpointID,
-			fromChainId: fromChain!.chainId,
-			estimatedFee: estimatedFee?.toString(),
-			estimatedFeeFormatted,
+			bridgeFactoryContract: fromChain.bridgeFactoryContract,
+			tokenAddress: token.tokenAddress,
+			liquidityPoolAddress: token.liquidityPoolAddress,
+			sender: address,
+			recipient: recipientAddress,
+			totalAmount: totalAmount.toString(),
+			targetChain: toChain!.chainId,
+			amountFormatted: formatUnits(totalAmount, tokenDecimals),
+			tokenDecimals,
 		});
 
-		console.log("destchain endpoint ID:", toChain!.lzEndpointID);
-
+		// Call BridgeFactory.reqBridge function
 		writeContract({
-			address: token.ProxyOFTAddress as Address,
-			abi: PROXY_OFT_ABI,
-			functionName: "sendFrom",
+			address: fromChain.bridgeFactoryContract as Address,
+			abi: BRIDGE_FACTORY_ABI,
+			functionName: "reqBridge",
 			args: [
-				address,
-				toChain!.lzEndpointID,
-				toAddressBytes,
-				amount,
-				finalMinAmount,
-				lzCallParams,
+				token.tokenAddress as Address, // token
+				totalAmount, // amount (total amount including fee)
+				BigInt(toChain!.chainId), // targetChain
+				recipientAddress as Address, // recipient
 			],
-			value: (estimatedFee * 200n) / 100n || parseUnits("0.001", 18), // Use estimated fee or fallback fee
 			chain: wagmiChain,
 			account: address,
 		});
 	}, [
 		isValidParams,
-		params,
 		token,
 		address,
-		amount,
-		toAddressBytes,
-		adapterParams,
+		totalAmount,
 		fromChain,
 		toChain,
-		estimatedFee,
-		estimatedFeeFormatted,
+		recipientAddress,
 		writeContract,
 	]);
 
@@ -467,11 +564,9 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 		approvalError,
 		approvalTxHash,
 
-		// Fee estimation
-		estimatedFee,
-		estimatedFeeFormatted,
-		isFeeLoading,
-		feeError,
+		// Bridge fee
+		bridgeFee,
+		bridgeFeeFormatted,
 
 		// Allowance checking
 		needsApproval,
@@ -479,10 +574,21 @@ export const useBridge = (params: BridgeParams): BridgeResult => {
 		isAllowanceLoading,
 		allowanceError,
 
+		// Pool statistics
+		poolStats,
+		isPoolStatsLoading,
+
+		// Minimum bridge amount validation
+		minBridgeAmount,
+		minBridgeAmountFormatted,
+		isMinAmountLoading,
+		meetsMinimumAmount,
+
 		// Helper data
 		fromChain,
 		toChain,
 		token,
 		isValidParams,
+		transactionId,
 	};
 };
