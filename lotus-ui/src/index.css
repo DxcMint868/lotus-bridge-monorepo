@@ -641,46 +641,6 @@ body:has([data-radix-portal])::before {
 	.scrollbar-thin::-webkit-scrollbar-thumb:hover {
 		background: rgb(244 164 208);
 	}
-
-	/* Enhanced scrollbar styles for transaction history */
-	.transaction-scroll {
-		scrollbar-width: thin;
-		scrollbar-color: rgb(251 207 232) transparent;
-	}
-
-	.transaction-scroll::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.transaction-scroll::-webkit-scrollbar-track {
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
-		margin: 8px 0;
-	}
-
-	.transaction-scroll::-webkit-scrollbar-thumb {
-		background: linear-gradient(
-			135deg,
-			rgb(244 164 208),
-			rgb(251 207 232)
-		);
-		border-radius: 10px;
-		border: 2px solid transparent;
-		background-clip: content-box;
-		transition: all 0.3s ease;
-	}
-
-	.transaction-scroll::-webkit-scrollbar-thumb:hover {
-		background: linear-gradient(
-			135deg,
-			rgb(236 72 153),
-			rgb(244 164 208)
-		);
-	}
-
-	.transaction-scroll::-webkit-scrollbar-corner {
-		background: transparent;
-	}
 }
 
 /* Enhanced Glassmorphism Utility Classes */

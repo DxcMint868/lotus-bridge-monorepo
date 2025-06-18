@@ -13,7 +13,6 @@ export interface ChainConfig {
 	swapRouterContract?: string;
 	quoterV2Contract?: string;
 	swapBridgeContract?: string;
-	simpleSwapBridgeContract?: string;
 	// Tokens and pools
 	tokens: Record<
 		string,
@@ -154,48 +153,6 @@ export const getTokenBridgeAddresses = (
 // Get chain entries with keys
 export const getChainEntries = (): [string, ChainConfig][] => {
 	return Object.entries(chains);
-};
-
-// Get native token information for a chain
-export const getNativeToken = (chainId: number): ChainToken | null => {
-	const chain = getChainById(chainId);
-	if (!chain) return null;
-
-	// Define native tokens for each chain
-	const nativeTokens: Record<number, { symbol: string; name: string; icon: string }> = {
-		1: { symbol: 'ETH', name: 'Ethereum', icon: '/chain-icons/ethereum.png' },
-		11155111: { symbol: 'ETH', name: 'Ethereum', icon: '/chain-icons/ethereum.png' }, // Sepolia
-		8453: { symbol: 'ETH', name: 'Ethereum', icon: '/chain-icons/base.png' },
-		84532: { symbol: 'ETH', name: 'Ethereum', icon: '/chain-icons/base.png' }, // Base Sepolia
-		137: { symbol: 'MATIC', name: 'Polygon', icon: '/placeholder.svg' },
-		80001: { symbol: 'MATIC', name: 'Polygon', icon: '/placeholder.svg' }, // Mumbai
-		56: { symbol: 'BNB', name: 'BNB Smart Chain', icon: '/placeholder.svg' },
-		97: { symbol: 'BNB', name: 'BNB Smart Chain', icon: '/placeholder.svg' }, // BSC Testnet
-		42161: { symbol: 'ETH', name: 'Ethereum', icon: '/placeholder.svg' }, // Arbitrum
-		421614: { symbol: 'ETH', name: 'Ethereum', icon: '/placeholder.svg' }, // Arbitrum Sepolia
-		10: { symbol: 'ETH', name: 'Ethereum', icon: '/placeholder.svg' }, // Optimism
-		11155420: { symbol: 'ETH', name: 'Ethereum', icon: '/placeholder.svg' }, // Optimism Sepolia
-	};
-
-	const nativeToken = nativeTokens[chainId];
-	if (!nativeToken) return null;
-
-	return {
-		tokenSymbol: nativeToken.symbol,
-		tokenName: nativeToken.name,
-		tokenAddress: '0x0000000000000000000000000000000000000000', // Native token address
-		liquidityPoolAddress: '', // Native tokens don't have liquidity pools in our bridge
-		icon: nativeToken.icon,
-		decimals: 18, // Most native tokens are 18 decimals
-	};
-};
-
-// Get all tokens including native token for a specific chain
-export const getAllTokensForChain = (chainId: number): ChainToken[] => {
-	const nativeToken = getNativeToken(chainId);
-	const erc20Tokens = getTokensForChain(chainId);
-	
-	return nativeToken ? [nativeToken, ...erc20Tokens] : erc20Tokens;
 };
 
 // Get token decimals by symbol for a specific chain

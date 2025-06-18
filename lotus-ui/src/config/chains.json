@@ -12,7 +12,6 @@
 		"swapRouterContract": "0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4",
 		"quoterV2Contract": "0xC5290058841028F1614F3A6F0F5816cAd0df5E27",
 		"swapBridgeContract": "0x396aa87BD4afBe1Bc4eebd5F420c45EABD110C0E",
-		"simpleSwapBridgeContract": "0xBD1f0aFf88a336765d5C9AA0363Ebd848B668dd6",
 		"tokens": {
 			"AXS": {
 				"address": "0xA0636375D1a93eB4998aE9a586ACE3CC664461ce",
@@ -100,7 +99,6 @@
 		"uniswapV3FactoryContract": "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
 		"quoterV2Contract": "0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3",
 		"swapBridgeContract": "0x9565f1964ec62A0d7af8a527AcfBAAC159162C9C",
-		"simpleSwapBridgeContract": "0xf5Fcb378C522d372BD050b4e3D0d65F7Fe72F081",
 		"tokens": {
 			"AXS": {
 				"address": "0x4faBa27A73DD517db50945c2F02621eba3959B1E",
