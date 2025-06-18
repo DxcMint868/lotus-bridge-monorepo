@@ -3,20 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-	ExternalLink, 
-	Copy, 
-	Check, 
-	Clock, 
-	CheckCircle, 
-	XCircle,
-	ArrowRightLeft,
-	Shield,
-	Zap,
-	Layers,
-	Circle,
-	Activity
-} from 'lucide-react'
+import { ExternalLink, Copy, Check } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { useTransactions, Transaction } from '@/contexts/TransactionContext'
 import { useTranslation } from '@/contexts/LanguageContext'
@@ -52,51 +39,40 @@ const TransactionHistory = () => {
 		switch (status) {
 			case 'pending':
 				return (
-					<Badge className="bg-yellow-100 text-yellow-700 flex items-center gap-1">
-						<Clock className="w-3 h-3" />
+					<Badge className="bg-yellow-100 text-yellow-700">
 						{t('transaction.pending')}
 					</Badge>
 				)
 			case 'completed':
 				return (
-					<Badge className="bg-lotus-green text-white flex items-center gap-1">
-						<CheckCircle className="w-3 h-3" />
+					<Badge className="bg-lotus-green text-white">
 						{t('transaction.completed')}
 					</Badge>
 				)
 			case 'failed':
 				return (
-					<Badge className="bg-red-100 text-red-700 flex items-center gap-1">
-						<XCircle className="w-3 h-3" />
+					<Badge className="bg-red-100 text-red-700">
 						{t('transaction.failed')}
 					</Badge>
 				)
 			default:
-				return (
-					<Badge variant="secondary" className="flex items-center gap-1">
-						<Activity className="w-3 h-3" />
-						{status}
-					</Badge>
-				)
+				return <Badge variant="secondary">{status}</Badge>
 		}
 	}
 
 	const getNetworkIcon = (network: string) => {
-		const networkName = network.toLowerCase()
-		
-		if (networkName.includes('ethereum') || networkName.includes('sepolia')) {
-			return <Layers className="w-5 h-5 text-blue-600" />
-		} else if (networkName.includes('bsc')) {
-			return <Zap className="w-5 h-5 text-yellow-600" />
-		} else if (networkName.includes('polygon')) {
-			return <Shield className="w-5 h-5 text-purple-600" />
-		} else if (networkName.includes('arbitrum')) {
-			return <Circle className="w-5 h-5 text-blue-500" />
-		} else if (networkName.includes('base')) {
-			return <Circle className="w-5 h-5 text-blue-700" />
-		} else {
-			return <ArrowRightLeft className="w-5 h-5 text-gray-600" />
+		const icons: { [key: string]: string } = {
+			ethereum: 'Ξ',
+			'ethereum sepolia': 'Ξ',
+			sepolia: 'Ξ',
+			bsc: '⚡',
+			'bsc testnet': '⚡',
+			polygon: '🔷',
+			arbitrum: '🔵',
+			base: '🔷',
+			'base sepolia': '🔷',
 		}
+		return icons[network.toLowerCase()] || '🔗'
 	}
 
 	const formatTime = (date: Date) => {
@@ -163,84 +139,71 @@ const TransactionHistory = () => {
 					</TabsList>
 
 					<TabsContent value={filter} className="mt-6">
-						{/* Scrollable container with fixed height */}
-						<div className="h-96 overflow-y-auto pr-2 transaction-scroll">
-							<div className="space-y-3">
-								{!address ? (
-									<div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
-										<ArrowRightLeft className="w-8 h-8 text-gray-300" />
-										{t('transaction.connectWalletToSee')}
-									</div>
-								) : filteredTransactions.length === 0 ? (
-									<div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
-										<Activity className="w-8 h-8 text-gray-300" />
-										{t('transaction.noTransactions', {
-											filter: filter !== 'all' ? t(`transaction.${filter}`) : '',
-										})}
-									</div>
-								) : (
-									filteredTransactions.map((transaction) => (
-										<div
-											key={transaction.id}
-											className="p-4 border border-pink-100 rounded-lg hover:border-pink-300 transition-all duration-200 hover:shadow-sm bg-white/50 backdrop-blur-sm"
-										>
-											<div className="flex items-center justify-between mb-3">
-												<div className="flex items-center space-x-2">
-													{getStatusBadge(transaction.status)}
-													<span className="text-sm text-gray-500">
-														{formatTime(transaction.timestamp)}
-													</span>
-													{transaction.type === 'approval' && (
-														<Badge variant="outline" className="text-xs flex items-center gap-1">
-															<Shield className="w-3 h-3" />
-															{t('transaction.approval')}
-														</Badge>
-													)}
-												</div>
-												{transaction.status === 'pending' &&
-													transaction.estimatedTime && (
-														<span className="text-sm text-lotus-pink-light font-medium flex items-center gap-1">
-															<Clock className="w-3 h-3" />
-															~{transaction.estimatedTime}
-														</span>
-													)}
+						<div className="space-y-4">
+							{!address ? (
+								<div className="text-center py-8 text-gray-500">
+									{t('transaction.connectWalletToSee')}
+								</div>
+							) : filteredTransactions.length === 0 ? (
+								<div className="text-center py-8 text-gray-500">
+									{t('transaction.noTransactions', {
+										filter: filter !== 'all' ? t(`transaction.${filter}`) : '',
+									})}
+								</div>
+							) : (
+								filteredTransactions.map((transaction) => (
+									<div
+										key={transaction.id}
+										className="p-4 border border-pink-100 rounded-lg hover:border-pink-300 transition-colors"
+									>
+										<div className="flex items-center justify-between mb-3">
+											<div className="flex items-center space-x-2">
+												{getStatusBadge(transaction.status)}
+												<span className="text-sm text-gray-500">
+													{formatTime(transaction.timestamp)}
+												</span>
+												{transaction.type === 'approval' && (
+													<Badge variant="outline" className="text-xs">
+														{t('transaction.approval')}
+													</Badge>
+												)}
 											</div>
+											{transaction.status === 'pending' &&
+												transaction.estimatedTime && (
+													<span className="text-sm text-lotus-pink-light font-medium">
+														~{transaction.estimatedTime}
+													</span>
+												)}
+										</div>
 
 										<div className="flex items-center justify-between">
 											<div className="flex items-center space-x-3">
-												<div className="flex-shrink-0">
+												<span className="text-lg">
 													{getNetworkIcon(transaction.fromNetwork)}
-												</div>
-												<div className="flex-grow">
-													<div className="font-medium text-gray-900 flex items-center gap-2">
-														<span>{transaction.amountFormatted} {transaction.fromToken}</span>
+												</span>
+												<div>
+													<div className="font-medium text-gray-900">
+														{transaction.amountFormatted}{' '}
+														{transaction.fromToken}
 														{transaction.fee && (
-															<span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-																{t('transaction.fee')}: {transaction.fee}
+															<span className="text-xs text-gray-500 ml-2">
+																({t('transaction.fee')}: {transaction.fee})
 															</span>
 														)}
 													</div>
-													<div className="text-sm text-gray-500 capitalize flex items-center gap-1">
-														{transaction.type === 'approval' ? (
-															<>
-																<Shield className="w-3 h-3" />
-																{t('transaction.approvalFor', {
+													<div className="text-sm text-gray-500 capitalize">
+														{transaction.type === 'approval'
+															? t('transaction.approvalFor', {
 																	token: transaction.fromToken,
-																})}
-															</>
-														) : (
-															<>
-																<ArrowRightLeft className="w-3 h-3" />
-																{transaction.fromNetwork} → {transaction.toNetwork}
-															</>
-														)}
+															  })
+															: `${transaction.fromNetwork} → ${transaction.toNetwork}`}
 													</div>
 													{transaction.recipient &&
 														transaction.recipient !==
 															transaction.userAddress && (
-															<div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-																<ArrowRightLeft className="w-3 h-3" />
-																{t('transaction.to')}: {formatAddress(transaction.recipient)}
+															<div className="text-xs text-gray-400">
+																{t('transaction.to')}:{' '}
+																{formatAddress(transaction.recipient)}
 															</div>
 														)}
 												</div>
@@ -251,15 +214,15 @@ const TransactionHistory = () => {
 													<Button
 														variant="ghost"
 														size="sm"
-														className="h-8 w-8 p-0 hover:bg-pink-100/50 backdrop-blur-sm transition-all rounded-full"
+														className="h-6 w-6 p-0 hover:bg-white/20 backdrop-blur-sm transition-all"
 														onClick={() =>
 															handleCopyTxId(transaction.id, transaction.hash)
 														}
 													>
 														{copiedTx === transaction.id ? (
-															<Check className="w-4 h-4 text-green-600" />
+															<Check className="w-3 h-3 text-green-600" />
 														) : (
-															<Copy className="w-4 h-4 text-gray-500 hover:text-gray-700" />
+															<Copy className="w-3 h-3 text-gray-400" />
 														)}
 													</Button>
 												)}
@@ -267,7 +230,7 @@ const TransactionHistory = () => {
 													<Button
 														variant="ghost"
 														size="sm"
-														className="text-lotus-pink-light hover:text-lotus-pink-dark text-xs px-3 h-8 hover:bg-pink-100/50 backdrop-blur-sm transition-all rounded-full"
+														className="text-lotus-pink-light hover:text-lotus-pink-dark text-xs px-2 h-7 hover:bg-white/20 backdrop-blur-sm transition-all"
 														onClick={() =>
 															window.open(
 																getExplorerUrl(transaction)!,
@@ -284,9 +247,9 @@ const TransactionHistory = () => {
 
 										{transaction.status === 'pending' && (
 											<div className="mt-3">
-												<div className="w-full bg-pink-100 rounded-full h-2">
+												<div className="w-full bg-gray-200 rounded-full h-1.5">
 													<div
-														className="bg-gradient-to-r from-lotus-pink to-lotus-pink-light h-2 rounded-full animate-pulse transition-all duration-300"
+														className="bg-lotus-pink h-1.5 rounded-full animate-pulse"
 														style={{ width: '65%' }}
 													/>
 												</div>
@@ -296,7 +259,6 @@ const TransactionHistory = () => {
 								))
 							)}
 						</div>
-					</div>
 					</TabsContent>
 				</Tabs>
 			</CardContent>

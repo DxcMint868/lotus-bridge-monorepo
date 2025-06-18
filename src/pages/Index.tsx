@@ -1,3 +1,4 @@
+import React from 'react'
 import Header from '../components/Header'
 import BridgeInterface from '../components/BridgeInterface'
 import TransactionHistory from '../components/TransactionHistory'

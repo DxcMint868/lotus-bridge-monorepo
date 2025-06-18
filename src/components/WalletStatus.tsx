@@ -25,6 +25,7 @@ const WalletStatus = () => {
 			<Card className="w-full lotus-card h-fit">
 				<CardContent className="pt-6">
 					<div className="text-center space-y-3">
+						<div className="text-4xl">🔗</div>
 						<div>
 							<h3 className="font-medium text-gray-900 mb-2">
 								{t('wallet.status')}

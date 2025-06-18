@@ -25,9 +25,7 @@ const AdvancedOptions: React.FC<AdvancedOptionsProps> = ({
 	onSlippageChange,
 	isSwapBridgeOperation = false,
 }) => {
-	const [localSlippage, setLocalSlippage] = useState(
-		slippageTolerance.toString()
-	)
+	const [localSlippage, setLocalSlippage] = useState(slippageTolerance.toString())
 	const [deadline, setDeadline] = useState('20')
 	const [gasBridging, setGasBridging] = useState(false)
 	const [customRecipient, setCustomRecipient] = useState(false)
@@ -107,8 +105,8 @@ const AdvancedOptions: React.FC<AdvancedOptionsProps> = ({
 									</div>
 								</div>
 								<p className="text-sm text-gray-600">
-									Your transaction will revert if the price changes unfavorably
-									by more than this percentage.
+									Your transaction will revert if the price changes unfavorably by
+									more than this percentage.
 								</p>
 							</div>
 						)}
@@ -168,6 +166,33 @@ const AdvancedOptions: React.FC<AdvancedOptionsProps> = ({
 										ETH
 									</span>
 								</div>
+							</div>
+						)}
+
+						{/* Custom Recipient */}
+						<div className="flex items-center justify-between">
+							<div className="space-y-1">
+								<Label className="text-base font-medium">
+									Custom Recipient
+								</Label>
+								<p className="text-sm text-gray-600">
+									Send tokens to a different address than your connected wallet
+								</p>
+							</div>
+							<Switch
+								checked={customRecipient}
+								onCheckedChange={setCustomRecipient}
+								className="data-[state=checked]:bg-lotus-pink"
+							/>
+						</div>
+
+						{customRecipient && (
+							<div className="ml-4 space-y-2">
+								<Label>Recipient Address</Label>
+								<Input
+									placeholder="0x..."
+									className="border-pink-200 focus:border-pink-400"
+								/>
 							</div>
 						)}
 					</CardContent>

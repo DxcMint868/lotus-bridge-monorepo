@@ -21,7 +21,6 @@ import { useSwitchChain, useChainId, useAccount } from 'wagmi'
 import { getChainByKey, getChainEntries, getTokenDecimals } from '@/lib/chains'
 import { useBridge, BridgeParams } from '@/hooks/useBridge'
 import { useSwapBridge, SwapBridgeParams } from '@/hooks/useSwapBridge'
-import { useSimpleBridge } from '@/hooks/useSimpleBridge'
 import { useTokenBalance } from '@/hooks/useTokenBalance'
 import { useTranslation } from '@/contexts/LanguageContext'
 import { useTransactions } from '@/contexts/TransactionContext'
@@ -82,24 +81,11 @@ const BridgeInterface = () => {
 		slippageTolerance: bridgeState.slippageTolerance,
 	}
 
-	// Simple bridge parameters for mock cross-token bridging
-	const simpleBridgeParams = {
-		fromChainKey: bridgeState.fromNetwork,
-		toChainKey: bridgeState.toNetwork,
-		fromToken: bridgeState.fromToken,
-		toToken: bridgeState.toToken,
-		amount: bridgeState.amount,
-		recipient: bridgeState.useConnectedWallet ? address : bridgeState.recipient,
-	}
-
 	// Bridge functionality using the bridge hook (for same token bridging)
 	const bridgeHook = useBridge(bridgeParams)
 
 	// Swap bridge functionality using the swap bridge hook (for different token operations)
 	const swapBridgeHook = useSwapBridge(swapBridgeParams)
-
-	// Simple mock bridge functionality
-	const simpleBridgeHook = useSimpleBridge(simpleBridgeParams)
 
 	// Choose the appropriate hook based on operation type
 	const {
@@ -164,35 +150,37 @@ const BridgeInterface = () => {
 		toTokenData,
 	} = isSwapBridgeOperation
 		? {
-				// Use simple mock bridge hook for cross-token operations
-				...simpleBridgeHook,
-				
-				// Map required fields for compatibility
+				// Use swap bridge hook data
+				...swapBridgeHook,
+				bridge: swapBridgeHook.startSwapBridge,
+				isLoading: swapBridgeHook.isProcessing,
+				isSuccess: swapBridgeHook.isCompleted,
+				error: swapBridgeHook.hasError
+					? { message: swapBridgeHook.errorMessage }
+					: null,
+				txHash: null, // Swap bridge has multiple transactions
+				reset: swapBridgeHook.reset,
+
+				// Map swap bridge specific fields
+				approveToken: () => {}, // Handled internally by swap bridge
+				isApproving: false,
+				isApprovalSuccess: false,
+				approvalError: null,
+				approvalTxHash: null,
 				bridgeFee: null,
 				bridgeFeeFormatted: null,
+				needsApproval: false, // Handled internally by swap bridge
+				currentAllowance: null,
+				isAllowanceLoading: false,
+				allowanceError: null,
 				poolStats: null,
 				isPoolStatsLoading: false,
 				minBridgeAmount: null,
 				minBridgeAmountFormatted: null,
 				isMinAmountLoading: false,
-				meetsMinimumAmount: true,
+				meetsMinimumAmount: true, // Assume true for swap bridge
+				token: swapBridgeHook.fromTokenData,
 				transactionId: null,
-				
-				// Add mock swap bridge fields
-				currentStep: 'idle' as const,
-				isProcessing: simpleBridgeHook.isLoading,
-				isCompleted: simpleBridgeHook.isSuccess,
-				hasError: !!simpleBridgeHook.error,
-				errorMessage: simpleBridgeHook.error?.message || null,
-				swapToVnstResult: null,
-				bridgeResult: null,
-				swapFromVnstResult: null,
-				startSwapBridge: simpleBridgeHook.bridge,
-				estimatedVnstAmount: simpleBridgeHook.estimatedOutput,
-				estimatedFinalAmount: simpleBridgeHook.estimatedOutput,
-				totalSteps: 1,
-				currentStepNumber: 1,
-				token: simpleBridgeHook.fromTokenData,
 		  }
 		: {
 				// Use regular bridge hook data
@@ -228,7 +216,7 @@ const BridgeInterface = () => {
 		hash: approvalTxHash as `0x${string}` | undefined,
 		onSuccess: () => {
 			console.log('Approval transaction confirmed')
-			// Note: Don't refetch balance here to avoid loops, useEffect below handles it
+			refetchBalance()
 		},
 		onError: (error) => {
 			console.error('Approval transaction failed:', error)
@@ -250,7 +238,7 @@ const BridgeInterface = () => {
 				updateTransaction(pendingApproval.id, { hash: approvalTxHash })
 			}
 		}
-	}, [approvalTxHash, address, bridgeState.fromToken, getUserTransactions, updateTransaction])
+	}, [approvalTxHash, address, bridgeState.fromToken])
 
 	useEffect(() => {
 		if (txHash && address && transactionId) {
@@ -266,7 +254,19 @@ const BridgeInterface = () => {
 				updateTransaction(pendingBridge.id, { hash: txHash })
 			}
 		}
-	}, [txHash, address, transactionId, getUserTransactions, updateTransaction])
+	}, [txHash, address, transactionId])
+
+	// Monitor approval transaction
+	useTransactionMonitor({
+		hash: approvalTxHash as `0x${string}` | undefined,
+		onSuccess: () => {
+			console.log('Approval transaction confirmed')
+			refetchBalance()
+		},
+		onError: (error) => {
+			console.error('Approval transaction failed:', error)
+		},
+	})
 
 	// Monitor bridge transaction
 	useTransactionMonitor({
@@ -274,7 +274,7 @@ const BridgeInterface = () => {
 		transactionId,
 		onSuccess: () => {
 			console.log('Bridge transaction confirmed')
-			// Note: Don't refetch balance here to avoid loops, useEffect below handles it
+			refetchBalance()
 			// Reset form after successful bridge
 			setBridgeState((prev) => ({
 				...prev,
@@ -320,15 +320,13 @@ const BridgeInterface = () => {
 		})
 	}
 
-	// Reset approval status when approval is successful (with debouncing to prevent loops)
+	// Reset approval status when approval is successful
 	useEffect(() => {
-		if (isApprovalSuccess || bridgeSuccess) {
-			const timer = setTimeout(() => {
-				refetchBalance()
-			}, 2000); // Wait 2 seconds before refetching to avoid loops
-			return () => clearTimeout(timer);
+		if (isApprovalSuccess) {
+			// Refetch balance after successful approval
+			refetchBalance()
 		}
-	}, [isApprovalSuccess, bridgeSuccess, refetchBalance])
+	}, [isApprovalSuccess, refetchBalance])
 
 	const swapNetworks = () => {
 		setBridgeState((prev) => ({
@@ -418,6 +416,14 @@ const BridgeInterface = () => {
 		// Execute the appropriate operation
 		bridge()
 	}
+
+	// Reset bridge state when transaction is successful
+	useEffect(() => {
+		if (bridgeSuccess) {
+			// Refetch balance after successful bridge
+			refetchBalance()
+		}
+	}, [bridgeSuccess, refetchBalance])
 
 	const canBridge = () => {
 		if (
@@ -705,9 +711,10 @@ const BridgeInterface = () => {
 							<span className="ml-2 text-gray-500">{bridgeState.toToken}</span>
 						</div>
 						{isSwapBridgeOperation
-							? estimatedFinalAmount && simpleBridgeHook.exchangeRate && (
+							? estimatedVnstAmount &&
+							  estimatedFinalAmount && (
 									<div className="text-xs text-gray-500">
-										Exchange Rate: 1 {bridgeState.fromToken} = {simpleBridgeHook.exchangeRate} {bridgeState.toToken}
+										Via {estimatedVnstAmount} VNST
 									</div>
 							  )
 							: bridgeState.amount &&
@@ -922,7 +929,7 @@ const BridgeInterface = () => {
 				)}
 
 				{/* Approval/Bridge Buttons */}
-				{needsApproval && (
+				{!isSwapBridgeOperation && needsApproval && (
 					<Button
 						onClick={handleApprove}
 						disabled={!canBridge() || isApproving || isAllowanceLoading}
@@ -952,8 +959,8 @@ const BridgeInterface = () => {
 					disabled={
 						!canBridge() ||
 						isBridging ||
-						needsApproval ||
-						isAllowanceLoading
+						(!isSwapBridgeOperation && needsApproval) ||
+						(!isSwapBridgeOperation && isAllowanceLoading)
 					}
 					className="w-full h-14 text-lg font-medium bg-gradient-to-r from-lotus-pink to-lotus-pink-dark hover:from-lotus-pink-dark hover:to-lotus-pink disabled:opacity-50 transition-all duration-300 backdrop-blur-md text-white"
 				>
@@ -966,12 +973,12 @@ const BridgeInterface = () => {
 						</div>
 					) : !isConnected ? (
 						'Connect Wallet'
-					) : isAllowanceLoading ? (
+					) : !isSwapBridgeOperation && isAllowanceLoading ? (
 						<div className="flex items-center space-x-2">
 							<Loader2 className="w-5 h-5 animate-spin" />
 							<span>{t('bridge.checkingAllowance')}</span>
 						</div>
-					) : needsApproval ? (
+					) : !isSwapBridgeOperation && needsApproval ? (
 						t('bridge.approveTokenFirst')
 					) : !canBridge() ? (
 						'Enter Valid Parameters'

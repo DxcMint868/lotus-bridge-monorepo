@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Search } from 'lucide-react'
-import { getTokensForChain, getNativeToken, ChainToken } from '@/lib/chains'
-import { useTranslation } from '@/contexts/LanguageContext'
+import { getTokensForChain, ChainToken } from '@/lib/chains'
 
 interface TokenSelectorProps {
 	networkChainId: number
@@ -28,17 +27,10 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 	label,
 	excludeTokens = [],
 }) => {
-	const { t } = useTranslation()
 	const [isOpen, setIsOpen] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
 
-	// Get native token for the selected network
-	const nativeToken = useMemo(() => {
-		if (!networkChainId) return null
-		return getNativeToken(networkChainId)
-	}, [networkChainId])
-
-	// Get available ERC20 tokens for the selected network
+	// Get available tokens for the selected network
 	const availableTokens = useMemo(() => {
 		if (!networkChainId) {
 			return []
@@ -48,32 +40,16 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 		return tokens.filter(token => !excludeTokens.includes(token.tokenSymbol))
 	}, [networkChainId, excludeTokens])
 
-	// Combine native token with ERC20 tokens
-	const allTokens = useMemo(() => {
-		const tokens = [...availableTokens]
-		if (nativeToken && !excludeTokens.includes(nativeToken.tokenSymbol)) {
-			tokens.unshift(nativeToken) // Add native token at the beginning
-		}
-		return tokens
-	}, [nativeToken, availableTokens, excludeTokens])
-
 	// Filter tokens based on search query
 	const filteredTokens = useMemo(() => {
-		if (!searchQuery.trim()) return allTokens
+		if (!searchQuery.trim()) return availableTokens
 
-		return allTokens.filter(
+		return availableTokens.filter(
 			(token: ChainToken) =>
 				token.tokenSymbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				token.tokenName.toLowerCase().includes(searchQuery.toLowerCase())
 		)
-	}, [allTokens, searchQuery])
-
-	// Get native token from filtered results
-	const filteredNativeToken = useMemo(() => {
-		return filteredTokens.find(token => 
-			nativeToken && token.tokenSymbol === nativeToken.tokenSymbol
-		)
-	}, [filteredTokens, nativeToken])
+	}, [availableTokens, searchQuery])
 
 	// Get Vietnamese tokens (VNST, VNDC, etc.)
 	const vietnameseTokens = useMemo(() => {
@@ -90,22 +66,20 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 		]
 		return filteredTokens.filter(
 			(token: ChainToken) =>
-				token !== filteredNativeToken && // Exclude native token
-				(token.tokenSymbol.includes('VN') ||
-				vietSymbols.includes(token.tokenSymbol))
+				token.tokenSymbol.includes('VN') ||
+				// token.tokenName.toLowerCase().includes('vietnam')
+				vietSymbols.includes(token.tokenSymbol)
 		)
-	}, [filteredTokens, filteredNativeToken])
+	}, [filteredTokens])
 
 	// Get other popular tokens
 	const otherTokens = useMemo(() => {
 		return filteredTokens.filter(
-			(token: ChainToken) => 
-				token !== filteredNativeToken && 
-				!vietnameseTokens.includes(token)
+			(token: ChainToken) => !vietnameseTokens.includes(token)
 		)
-	}, [filteredTokens, filteredNativeToken, vietnameseTokens])
+	}, [vietnameseTokens])
 
-	const selectedToken = allTokens.find(
+	const selectedToken = availableTokens.find(
 		(token: ChainToken) => token.tokenSymbol === value
 	)
 
@@ -140,7 +114,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 							</div>
 						</div>
 					) : (
-						<span className="text-gray-500">{t('bridge.selectToken')}</span>
+						<span className="text-gray-500">Select Token</span>
 					)}
 					<span className="text-gray-400">▼</span>
 				</Button>
@@ -148,7 +122,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 			<DialogContent className="sm:max-w-md max-w-[95vw] max-h-[85vh] bg-white/90 backdrop-blur-md border border-white/50 shadow-xl rounded-xl">
 				<DialogHeader>
 					<DialogTitle className="lotus-text-gradient text-xl font-semibold">
-						{t('bridge.selectToken')}
+						Select Token
 					</DialogTitle>
 				</DialogHeader>
 
@@ -156,7 +130,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 				<div className="relative mt-4">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
 					<Input
-						placeholder={t('bridge.selectToken')}
+						placeholder="Search tokens..."
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className="pl-10 bg-white/60 backdrop-blur-sm border-pink-200 focus:border-pink-400 focus:bg-white/80 transition-all"
@@ -165,50 +139,13 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 
 				{/* Scrollable Content */}
 				<div className="overflow-y-auto max-h-[calc(85vh-140px)] sm:max-h-[55vh] pr-2 scrollbar-thin scrollbar-thumb-pink-400 scrollbar-track-white/20 mt-4">
-					{/* Native Token Section */}
-					{filteredNativeToken && (
-						<div className="mb-6">
-							<div className="flex items-center space-x-2 mb-3 px-1">
-								<h3 className="font-semibold text-gray-800">{t('bridge.nativeToken')}</h3>
-								<Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs px-2 py-1">
-									{t('bridge.nativeToken')}
-								</Badge>
-							</div>
-							<div className="space-y-2">
-								<button
-									onClick={() => selectToken(filteredNativeToken)}
-									className="w-full flex items-center justify-between p-3 bg-blue-50/70 backdrop-blur-sm border border-blue-200 rounded-lg hover:border-blue-400 hover:bg-blue-50/90 transition-all duration-200"
-								>
-									<div className="flex items-center space-x-3">
-										<img
-											src={filteredNativeToken.icon}
-											alt={filteredNativeToken.tokenSymbol}
-											className="w-8 h-8 rounded-full flex-shrink-0"
-											onError={(e) => {
-												;(e.target as HTMLImageElement).src = '/placeholder.svg'
-											}}
-										/>
-										<div className="text-left min-w-0 flex-1">
-											<div className="font-semibold text-gray-800 truncate">
-												{filteredNativeToken.tokenSymbol}
-											</div>
-											<div className="text-sm text-gray-600 truncate">
-												{t('bridge.nativeTokenDescription')}
-											</div>
-										</div>
-									</div>
-								</button>
-							</div>
-						</div>
-					)}
-
 					{/* Vietnamese Tokens Section */}
 					{vietnameseTokens.length > 0 && (
 						<div className="mb-6">
 							<div className="flex items-center space-x-2 mb-3 px-1">
-								<h3 className="font-semibold text-gray-800">{t('bridge.vietnameseTokens')}</h3>
+								<h3 className="font-semibold text-gray-800">Vietnamese Tokens</h3>
 								<Badge className="bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs px-2 py-1">
-									{t('bridge.recommended')}
+									Recommended
 								</Badge>
 							</div>
 							<div className="space-y-2">
@@ -246,7 +183,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 					{/* Other Tokens Section */}
 					{otherTokens.length > 0 && (
 						<div className="mb-6">
-							<h3 className="font-semibold text-gray-800 mb-3 px-1">{t('bridge.otherTokens')}</h3>
+							<h3 className="font-semibold text-gray-800 mb-3 px-1">Other Tokens</h3>
 							<div className="space-y-2">
 								{otherTokens.map((token) => (
 									<button
