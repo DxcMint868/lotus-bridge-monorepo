@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Token Cross-Chain Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Import ethers.js v6 library -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌉 Multi-Token Cross-Chain Bridge</h1>
+            <p>Transfer tokens between Sepolia and Base Sepolia testnets</p>
+        </header>
+
+        <div class="wallet-section">
+            <button id="connectWallet" class="btn-primary">Connect MetaMask</button>
+            <div id="walletInfo" class="wallet-info hidden">
+                <p><strong>Address:</strong> <span id="walletAddress"></span></p>
+                <p><strong>Network:</strong> <span id="currentNetwork"></span></p>
+                <p><strong>Token Balance:</strong> <span id="tokenBalance">0</span> <span id="selectedTokenSymbol">-</span></p>
+            </div>
+        </div>
+
+        <div class="bridge-section">
+            <div class="bridge-form">
+                <h2>Bridge Tokens</h2>
+                
+                <div class="form-group">
+                    <label for="bridgeModeSelect">Bridge Mechanism:</label>
+                    <select id="bridgeModeSelect">
+                        <option value="mint-burn">Mint/Burn (Cross-chain tokens)</option>
+                        <option value="lock-release">Lock/Release (Original tokens)</option>
+                    </select>
+                    <small id="bridgeModeInfo">Mint/Burn: Creates new tokens on destination chain</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tokenSelect">Select Token:</label>
+                    <select id="tokenSelect">
+                        <option value="">Choose a token...</option>
+                        <option value="AXS">AXS - Axie Infinity Shard</option>
+                        <option value="SLP">SLP - Smooth Love Potion</option>
+                        <option value="VNST">VNST - VN Stable</option>
+                        <option value="VNDC">VNDC - VN Digital Coin</option>
+                        <option value="A8">A8 - A8 Token</option>
+                        <option value="SIPHER">SIPHER - Sipher Token</option>
+                        <option value="C98">C98 - Coin98</option>
+                        <option value="KNC">KNC - Kyber Network Crystal</option>
+                        <option value="KAI">KAI - KardiaChain</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fromNetwork">From Network:</label>
+                    <select id="fromNetwork">
+                        <option value="11155111">Sepolia Testnet</option>
+                        <option value="84532">Base Sepolia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="toNetwork">To Network:</label>
+                    <select id="toNetwork">
+                        <option value="84532">Base Sepolia</option>
+                        <option value="11155111">Sepolia Testnet</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipientAddress">Recipient Address:</label>
+                    <input type="text" id="recipientAddress" placeholder="0x..." />
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" placeholder="1000" min="1000" />
+                    <small>Minimum: 1,000 tokens</small>
+                </div>
+
+                <div class="fee-info">
+                    <p><strong>Bridge Fee:</strong> <span id="bridgeFee">0</span> <span id="feeTokenSymbol">tokens</span> (0.5%)</p>
+                    <p><strong>Amount After Fee:</strong> <span id="amountAfterFee">0</span> <span id="afterFeeTokenSymbol">tokens</span></p>
+                </div>
+
+                <div class="form-actions">
+                    <button id="approveTokens" class="btn-secondary" disabled>1. Approve Tokens</button>
+                    <button id="bridgeTokens" class="btn-primary" disabled>2. Bridge Tokens</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-section">
+            <h3>Recent Transactions</h3>
+            <div id="transactionList" class="transaction-list">
+                <p class="no-transactions">No transactions yet</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li>Connect your MetaMask wallet</li>
+                <li>Select the token you want to bridge</li>
+                <li>Select source and destination networks</li>
+                <li>Enter recipient address and amount</li>
+                <li>Approve tokens for the bridge contract</li>
+                <li>Execute the bridge transaction</li>
+                <li>Wait for the tokens to appear on the destination network</li>
+            </ol>
+            
+            <div class="supported-tokens">
+                <h4>Supported Tokens</h4>
+                <div class="token-grid">
+                    <div class="token-item">AXS - Axie Infinity Shard</div>
+                    <div class="token-item">SLP - Smooth Love Potion</div>
+                    <div class="token-item">VNST - VN Stable</div>
+                    <div class="token-item">VNDC - VN Digital Coin</div>
+                    <div class="token-item">A8 - A8 Token</div>
+                    <div class="token-item">SIPHER - Sipher Token</div>
+                    <div class="token-item">C98 - Coin98</div>
+                    <div class="token-item">KNC - Kyber Network Crystal</div>
+                    <div class="token-item">KAI - KardiaChain</div>
+                </div>
+            </div>
+            
+            <div class="contract-addresses">
+                <h4>Contract Addresses</h4>
+                <p><strong>Sepolia:</strong></p>
+                <p class="address">TokenFactory: <span id="sepoliaFactoryAddress">Deploy contracts first</span></p>
+                <p class="address">Bridge: <span id="sepoliaBridgeAddress">Deploy contracts first</span></p>
+                
+                <p><strong>Base Sepolia:</strong></p>
+                <p class="address">TokenFactory: <span id="baseSepoliaFactoryAddress">Deploy contracts first</span></p>
+                <p class="address">Bridge: <span id="baseSepoliaBridgeAddress">Deploy contracts first</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="bridge.js"></script>
+</body>
+</html>
