@@ -1,0 +1,448 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vietnamese Lotus Bridge Design System */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Lotus Pink Tones */
+    --primary: 329 73% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Subtle Vietnamese Green Tones */
+    --secondary: 142 35% 65%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 329 40% 95%;
+    --accent-foreground: 329 73% 60%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 329 73% 60%;
+
+    --radius: 0.75rem;
+
+    /* Lotus Bridge Custom Colors - Light Mode */
+    --lotus-pink: 329 85% 58%; /* rgb(236, 72, 153) */
+    --lotus-pink-light: 329 70% 70%; /* Lighter variant */
+    --lotus-pink-dark: 329 90% 45%; /* Darker variant */
+    --lotus-green: 160 30% 60%; /* Subtle teal-green */
+    --lotus-green-light: 160 25% 75%; /* Light teal */
+    --lotus-green-dark: 160 35% 45%; /* Dark teal */
+    --lotus-white: 0 0% 100%; /* Pure white */
+    --lotus-cream: 45 50% 98%; /* Warm cream */
+    --dong-son-bronze: 30 50% 55%; /* Refined bronze */
+  }
+
+  .dark {
+    /* Blueish-black X-inspired color scheme */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 329 78% 65%;
+    --primary-foreground: 222 84% 5%;
+
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 32% 17%;
+    --accent-foreground: 329 78% 65%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 329 78% 65%;
+
+    /* Lotus Bridge Custom Colors - Dark Mode */
+    --lotus-pink: 329 78% 65%;
+    --lotus-pink-light: 329 65% 80%;
+    --lotus-pink-dark: 329 90% 55%;
+    --lotus-green: 142 18% 75%;
+    --lotus-green-light: 142 12% 85%;
+    --lotus-green-dark: 142 25% 65%;
+    --lotus-white: 222 47% 11%;
+    --lotus-cream: 217 32% 17%;
+    --dong-son-bronze: 30 55% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(252, 249, 253, 1) 25%,
+      rgba(249, 245, 255, 1) 50%,
+      rgba(245, 242, 255, 1) 75%,
+      rgba(240, 238, 255, 1) 100%
+    );
+    background-attachment: fixed;
+    color: hsl(var(--foreground));
+    min-height: 100vh;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+        circle at 20% 20%,
+        rgba(236, 72, 153, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(147, 51, 234, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 40%,
+        rgba(59, 130, 246, 0.03) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+    z-index: -1;
+    /* animation: elegant-float 60s ease-in-out infinite; */
+  }
+
+  body.dark {
+    background: linear-gradient(
+      135deg,
+      rgba(15, 15, 23, 1) 0%,
+      rgba(20, 20, 31, 1) 25%,
+      rgba(25, 25, 39, 1) 50%,
+      rgba(30, 30, 47, 1) 75%,
+      rgba(35, 35, 55, 1) 100%
+    );
+    background-attachment: fixed;
+  }
+
+  body.dark::before {
+    background-image: radial-gradient(
+        circle at 20% 20%,
+        rgba(236, 72, 153, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(147, 51, 234, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 40%,
+        rgba(59, 130, 246, 0.05) 0%,
+        transparent 50%
+      );
+  }
+}
+
+@layer components {
+  .lotus-gradient {
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 0.9) 0%,
+      rgba(219, 39, 119, 0.9) 50%,
+      rgba(157, 23, 77, 0.9) 100%
+    );
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .lotus-gradient:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 1) 0%,
+      rgba(219, 39, 119, 1) 50%,
+      rgba(157, 23, 77, 1) 100%
+    );
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .lotus-text-gradient {
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 1) 0%,
+      rgba(219, 39, 119, 1) 50%,
+      rgba(157, 23, 77, 1) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .lotus-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(236, 72, 153, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
+      0 4px 10px rgba(236, 72, 153, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .lotus-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15),
+      0 6px 15px rgba(236, 72, 153, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .dark .lotus-card {
+    background: rgba(30, 30, 47, 0.95);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+      0 4px 10px rgba(236, 72, 153, 0.2);
+  }
+
+  .dong-son-pattern {
+    background-image: radial-gradient(
+        circle at 25% 25%,
+        rgba(219, 39, 119, 0.1) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 75% 75%,
+        hsl(var(--lotus-green) / 0.1) 0%,
+        transparent 50%
+      );
+  }
+
+  .dark .dong-son-pattern {
+    background-image: radial-gradient(
+        circle at 25% 25%,
+        rgba(219, 39, 119, 0.03) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 75% 75%,
+        rgba(59, 130, 246, 0.02) 0%,
+        transparent 50%
+      );
+  }
+}
+
+/* Lotus Animation Keyframes */
+@keyframes elegant-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.03;
+  }
+  50% {
+    transform: translate(10px, -10px) scale(1.02);
+    opacity: 0.05;
+  }
+}
+
+@keyframes lotus-bloom {
+  0% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes lotus-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.lotus-animate {
+  animation: lotus-bloom 3s ease-in-out infinite;
+}
+
+.lotus-float {
+  animation: lotus-float 4s ease-in-out infinite;
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* RainbowKit Custom Theme - Lotus Style */
+[data-rk] {
+  --rk-colors-accentColor: hsl(var(--lotus-pink));
+  --rk-colors-accentColorForeground: hsl(var(--lotus-white));
+  --rk-colors-actionButtonBorder: hsl(var(--border));
+  --rk-colors-actionButtonBorderMobile: hsl(var(--border));
+  --rk-colors-actionButtonSecondaryBackground: hsl(var(--muted));
+  --rk-colors-closeButton: hsl(var(--muted-foreground));
+  --rk-colors-closeButtonBackground: hsl(var(--muted));
+  --rk-colors-connectButtonBackground: linear-gradient(
+    135deg,
+    hsl(var(--lotus-pink)),
+    hsl(var(--lotus-pink-dark))
+  );
+  --rk-colors-connectButtonBackgroundError: hsl(var(--destructive));
+  --rk-colors-connectButtonInnerBackground: hsl(var(--background));
+  --rk-colors-connectButtonText: hsl(var(--lotus-white));
+  --rk-colors-connectButtonTextError: hsl(var(--destructive-foreground));
+  --rk-colors-connectionIndicator: hsl(var(--lotus-green));
+  --rk-colors-downloadBottomCardBackground: linear-gradient(
+    135deg,
+    hsl(var(--lotus-pink-light)),
+    hsl(var(--lotus-cream))
+  );
+  --rk-colors-downloadTopCardBackground: hsl(var(--background));
+  --rk-colors-error: hsl(var(--destructive));
+  --rk-colors-generalBorder: hsl(var(--border));
+  --rk-colors-generalBorderDim: hsl(var(--border));
+  --rk-colors-menuItemBackground: hsl(var(--background));
+  --rk-colors-modalBackdrop: rgba(0, 0, 0, 0.3);
+  --rk-colors-modalBackground: hsl(var(--background));
+  --rk-colors-modalBorder: hsl(var(--border));
+  --rk-colors-modalText: hsl(var(--foreground));
+  --rk-colors-modalTextDim: hsl(var(--muted-foreground));
+  --rk-colors-modalTextSecondary: hsl(var(--muted-foreground));
+  --rk-colors-profileAction: hsl(var(--muted));
+  --rk-colors-profileActionHover: hsl(var(--accent));
+  --rk-colors-profileForeground: hsl(var(--background));
+  --rk-colors-selectedOptionBorder: hsl(var(--lotus-pink));
+  --rk-colors-standby: hsl(var(--muted-foreground));
+  --rk-radii-actionButton: var(--radius);
+  --rk-radii-connectButton: var(--radius);
+  --rk-radii-menuButton: var(--radius);
+  --rk-radii-modal: var(--radius);
+  --rk-radii-modalMobile: var(--radius);
+}
+
+/* Custom RainbowKit button styling */
+[data-rk] button[data-testid="rk-connect-button"] {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--lotus-pink)),
+    hsl(var(--lotus-pink-dark))
+  );
+  border: none;
+  color: hsl(var(--lotus-white));
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: var(--radius);
+}
+
+[data-rk] button[data-testid="rk-connect-button"]:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Fix for modal positioning issues caused by background animation */
+[data-radix-portal] {
+  z-index: 9999 !important;
+  position: fixed !important;
+  isolation: isolate;
+}
+
+[data-radix-portal] [role="dialog"] {
+  position: fixed !important;
+  z-index: 10000 !important;
+  transform: none !important;
+  isolation: isolate;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Ensure dialog overlays are properly positioned */
+[data-radix-portal] [data-radix-dialog-overlay] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  background: rgba(0, 0, 0, 0.5);
+  isolation: isolate;
+}
+
+/* Additional modal fixes */
+[role="dialog"] {
+  will-change: auto !important;
+  transform-origin: center !important;
+}
+
+/* Specific fix for lotus-card dialogs */
+[role="dialog"].lotus-card,
+[role="dialog"] .lotus-card {
+  transform: none !important;
+  position: relative !important;
+}
+
+/* Force static positioning for dialog content */
+[data-radix-dialog-content] {
+  position: relative !important;
+  transform: none !important;
+}
+
+/* Override any transforms on dialog elements */
+[data-radix-portal] * {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Stop background animation from affecting modals */
+body:has([data-radix-portal]) {
+  transform: none !important;
+}
+
+body:has([data-radix-portal])::before {
+  animation: none !important;
+  transform: none !important;
+}

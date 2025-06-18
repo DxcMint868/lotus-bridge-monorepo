@@ -1,0 +1,22 @@
+{
+  "name": "vnd-bridge-relayer",
+  "version": "1.0.0",
+  "description": "Automated relayer service for VND cross-chain bridge",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ethers": "^6.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["bridge", "relayer", "ethereum", "base", "automation"],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,48 @@
+{
+  "84532": {
+    "chainId": 84532,
+    "chainName": "Base Sepolia",
+    "isTestnet": true,
+    "bridgeContract": {
+      "address": "0x1234567890abcdef1234567890abcdef12345678",
+      "name": "Base Sepolia Bridge"
+    },
+    "tokens": [
+      {
+        "address": "0420...",
+        "name": "Vietnam Stable Coin",
+        "symbol": "VNST",
+        "decimals": 18
+      },
+      {
+        "address": "0420...",
+        "name": "Vietnam Stable Coin",
+        "symbol": "VNST",
+        "decimals": 18
+      }
+    ]
+  },
+  "17000": {
+    "chainId": 17000,
+    "chainName": "Ethereum Holesky",
+    "isTestnet": true,
+    "bridgeContract": {
+      "address": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      "name": "Ethereum Holesky Bridge"
+    },
+    "tokens": [
+      {
+        "address": "0420...",
+        "name": "Vietnam Stable Coin",
+        "symbol": "VNST",
+        "decimals": 18
+      },
+      {
+        "address": "0420...",
+        "name": "Vietnam Stable Coin",
+        "symbol": "VNST",
+        "decimals": 18
+      }
+    ]
+  }
+}
