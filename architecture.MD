@@ -180,7 +180,10 @@ The bridge must source its tokens from somewhere. The protocol dynamically choos
 
 - **Liquidity Pool Mechanism (For High-Volume Routes)**: For major corridors (e.g., ETH-USDC), the protocol can also use traditional liquidity pools. A user's deposit on the source chain is matched with a withdrawal from a pool on the destination chain. This allows users to receive a native asset (e.g., native USDC instead of `loUSDC`), which can be a better user experience, but it requires significant upfront capital to fund the pools.
 
-By combining intelligent routing with this hybrid execution layer, the protocol offers a system that is simultaneously powerful, flexible, and simple for the end-user.
+By combining intelligent routing with this hybrid execution layer, the protocol offers a system 
+that is simultaneously powerful, flexible, and simple for the end-user.
+
+```mermaid
     actor User
     participant SourceChain as Source Chain (e.g., Ethereum)
     participant Messaging as Messaging Layer (LayerZero or LMB)
