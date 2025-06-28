@@ -10,7 +10,13 @@ import {
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Search, ChevronDown, MoreHorizontal } from 'lucide-react'
-import { getChainByKey, getChainEntries, getTokensForChain, getNativeToken, ChainToken } from '@/lib/chains'
+import {
+	getChainByKey,
+	getChainEntries,
+	getTokensForChain,
+	getNativeToken,
+	ChainToken,
+} from '@/lib/chains'
 import { useTranslation } from '@/contexts/LanguageContext'
 
 interface CompactNetworkTokenSelectorProps {
@@ -23,7 +29,9 @@ interface CompactNetworkTokenSelectorProps {
 	excludeTokens?: string[]
 }
 
-const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = ({
+const CompactNetworkTokenSelector: React.FC<
+	CompactNetworkTokenSelectorProps
+> = ({
 	networkValue,
 	tokenValue,
 	onNetworkChange,
@@ -38,13 +46,16 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 	const [showAllNetworks, setShowAllNetworks] = useState(false)
 
 	// Get current chain and token data
-	const selectedChain = useMemo(() => getChainByKey(networkValue), [networkValue])
+	const selectedChain = useMemo(
+		() => getChainByKey(networkValue),
+		[networkValue]
+	)
 	const selectedToken = useMemo(() => {
 		if (!selectedChain) return null
 		const tokens = getTokensForChain(selectedChain.chainId)
 		const nativeToken = getNativeToken(selectedChain.chainId)
 		const allTokens = nativeToken ? [nativeToken, ...tokens] : tokens
-		return allTokens.find(token => token.tokenSymbol === tokenValue)
+		return allTokens.find((token) => token.tokenSymbol === tokenValue)
 	}, [selectedChain, tokenValue])
 
 	// Get available networks
@@ -56,15 +67,17 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 				return {
 					chainKey,
 					...chain,
-					nativeCurrency: nativeToken ? {
-						symbol: nativeToken.tokenSymbol,
-						name: nativeToken.tokenName,
-						decimals: 18
-					} : {
-						symbol: 'ETH',
-						name: 'Ether',
-						decimals: 18
-					}
+					nativeCurrency: nativeToken
+						? {
+								symbol: nativeToken.tokenSymbol,
+								name: nativeToken.tokenName,
+								decimals: 18,
+						  }
+						: {
+								symbol: 'ETH',
+								name: 'Ether',
+								decimals: 18,
+						  },
 				}
 			})
 	}, [excludeChain])
@@ -75,28 +88,43 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 		const tokens = getTokensForChain(selectedChain.chainId)
 		const nativeToken = getNativeToken(selectedChain.chainId)
 		const allTokens = nativeToken ? [nativeToken, ...tokens] : tokens
-		return allTokens.filter(token => !excludeTokens.includes(token.tokenSymbol))
+		return allTokens.filter(
+			(token) => !excludeTokens.includes(token.tokenSymbol)
+		)
 	}, [selectedChain, excludeTokens])
 
 	// Filter tokens based on search
 	const filteredTokens = useMemo(() => {
 		if (!searchQuery.trim()) return availableTokens
-		return availableTokens.filter(token =>
-			token.tokenSymbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			token.tokenName.toLowerCase().includes(searchQuery.toLowerCase())
+		return availableTokens.filter(
+			(token) =>
+				token.tokenSymbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				token.tokenName.toLowerCase().includes(searchQuery.toLowerCase())
 		)
 	}, [availableTokens, searchQuery])
 
 	// Vietnamese tokens for priority display
 	const vietnameseTokens = useMemo(() => {
-		const vietSymbols = ['AXS', 'SLP', 'VNST', 'VNDC', 'A8', 'SIPHER', 'C98', 'KNC', 'KAI']
-		return filteredTokens.filter(token =>
-			token.tokenSymbol.includes('VN') || vietSymbols.includes(token.tokenSymbol)
+		const vietSymbols = [
+			'AXS',
+			'SLP',
+			'VNST',
+			'VNDC',
+			'A8',
+			'SIPHER',
+			'C98',
+			'KNC',
+			'KAI',
+		]
+		return filteredTokens.filter(
+			(token) =>
+				token.tokenSymbol.includes('VN') ||
+				vietSymbols.includes(token.tokenSymbol)
 		)
 	}, [filteredTokens])
 
 	const otherTokens = useMemo(() => {
-		return filteredTokens.filter(token => !vietnameseTokens.includes(token))
+		return filteredTokens.filter((token) => !vietnameseTokens.includes(token))
 	}, [filteredTokens, vietnameseTokens])
 
 	// Networks to show in grid (first 8 or all if showAllNetworks is true)
@@ -136,11 +164,16 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 					<div className="flex items-center space-x-3">
 						{/* Network Icon */}
 						{selectedChain && (
-							<div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm font-bold">
-								{selectedChain.chainName.charAt(0)}
-							</div>
+							<img
+								src={selectedChain.chainIcon}
+								alt={selectedChain.chainName}
+								className="w-8 h-8 rounded-full"
+								onError={(e) => {
+									;(e.target as HTMLImageElement).src = '/placeholder.svg'
+								}}
+							/>
 						)}
-						
+
 						{/* Token Icon and Info */}
 						{selectedToken && (
 							<img
@@ -148,11 +181,11 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 								alt={selectedToken.tokenSymbol}
 								className="w-6 h-6 rounded-full"
 								onError={(e) => {
-									(e.target as HTMLImageElement).src = '/placeholder.svg'
+									;(e.target as HTMLImageElement).src = '/placeholder.svg'
 								}}
 							/>
 						)}
-						
+
 						<div className="text-left">
 							<div className="flex items-center space-x-2">
 								<span className="font-semibold text-gray-900">
@@ -170,7 +203,7 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 					<ChevronDown className="h-4 w-4 text-gray-400" />
 				</Button>
 			</DialogTrigger>
-			
+
 			<DialogContent className="sm:max-w-lg max-w-[95vw] max-h-[85vh] bg-white/95 backdrop-blur-md border border-white/50 shadow-xl rounded-xl">
 				<DialogHeader>
 					<DialogTitle className="lotus-text-gradient text-xl font-semibold">
@@ -181,7 +214,7 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 				{/* Networks Grid Section */}
 				<div className="space-y-4">
 					<h3 className="text-sm font-medium text-gray-700">Select Network</h3>
-					
+
 					{/* Networks Grid */}
 					<div className="grid grid-cols-4 gap-3">
 						{displayedNetworks.map((network) => (
@@ -194,9 +227,16 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 										: 'bg-white/50 border-gray-200 hover:border-pink-300 hover:bg-white/80'
 								}`}
 							>
-								<div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-sm mb-2">
-									{network.chainName.charAt(0)}
-								</div>
+								<img
+									src={network.chainIcon}
+									alt={network.chainName}
+									width="40"
+									height="40"
+									className="w-10 h-10 rounded-full mb-2"
+									onError={(e) => {
+										;(e.target as HTMLImageElement).src = '/placeholder.svg'
+									}}
+								/>
 								<span className="text-xs text-center font-medium text-gray-900 truncate w-full">
 									{network.chainName}
 								</span>
@@ -245,7 +285,9 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 						<div className="text-center py-8 text-gray-600">
 							<div className="text-4xl mb-2">🌐</div>
 							<p className="font-semibold">Select a network first</p>
-							<p className="text-sm">Choose a network to see available tokens</p>
+							<p className="text-sm">
+								Choose a network to see available tokens
+							</p>
 						</div>
 					) : (
 						<>
@@ -266,7 +308,9 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 								{vietnameseTokens.length > 0 && (
 									<div className="mb-4">
 										<div className="flex items-center space-x-2 mb-3">
-											<h4 className="font-semibold text-gray-800 text-sm">Vietnamese Tokens</h4>
+											<h4 className="font-semibold text-gray-800 text-sm">
+												Vietnamese Tokens
+											</h4>
 											<Badge className="bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs">
 												Priority
 											</Badge>
@@ -287,7 +331,8 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 														alt={token.tokenSymbol}
 														className="w-8 h-8 rounded-full"
 														onError={(e) => {
-															(e.target as HTMLImageElement).src = '/placeholder.svg'
+															;(e.target as HTMLImageElement).src =
+																'/placeholder.svg'
 														}}
 													/>
 													<div className="text-left flex-1">
@@ -299,7 +344,9 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 														</div>
 													</div>
 													{tokenValue === token.tokenSymbol && (
-														<Badge className="bg-pink-500 text-white text-xs">Selected</Badge>
+														<Badge className="bg-pink-500 text-white text-xs">
+															Selected
+														</Badge>
 													)}
 												</button>
 											))}
@@ -310,7 +357,9 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 								{/* Other Tokens */}
 								{otherTokens.length > 0 && (
 									<div>
-										<h4 className="font-semibold text-gray-800 mb-3 text-sm">Other Tokens</h4>
+										<h4 className="font-semibold text-gray-800 mb-3 text-sm">
+											Other Tokens
+										</h4>
 										<div className="space-y-2">
 											{otherTokens.map((token) => (
 												<button
@@ -327,7 +376,8 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 														alt={token.tokenSymbol}
 														className="w-8 h-8 rounded-full"
 														onError={(e) => {
-															(e.target as HTMLImageElement).src = '/placeholder.svg'
+															;(e.target as HTMLImageElement).src =
+																'/placeholder.svg'
 														}}
 													/>
 													<div className="text-left flex-1">
@@ -339,7 +389,9 @@ const CompactNetworkTokenSelector: React.FC<CompactNetworkTokenSelectorProps> = 
 														</div>
 													</div>
 													{tokenValue === token.tokenSymbol && (
-														<Badge className="bg-gray-500 text-white text-xs">Selected</Badge>
+														<Badge className="bg-gray-500 text-white text-xs">
+															Selected
+														</Badge>
 													)}
 												</button>
 											))}

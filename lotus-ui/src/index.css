@@ -228,9 +228,9 @@
 	.lotus-text-gradient {
 		background: linear-gradient(
 			135deg,
-			rgba(236, 72, 153, 1) 0%,
-			rgba(219, 39, 119, 1) 50%,
-			rgba(219, 39, 119, 1) 100%
+			rgba(244, 114, 182, 1) 0%,
+			/* lighter pink */ rgba(236, 72, 153, 1) 50%,
+			/* lotus-pink */ rgba(219, 39, 119, 1) 100%
 		);
 		background-clip: text;
 		-webkit-background-clip: text;

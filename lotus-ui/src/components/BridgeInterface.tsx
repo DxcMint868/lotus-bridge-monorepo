@@ -17,7 +17,13 @@ import {
 	RefreshCw,
 } from 'lucide-react'
 import { useSwitchChain, useChainId, useAccount } from 'wagmi'
-import { getChainByKey, getChainEntries, getTokenDecimals, getTokensForChain, getNativeToken } from '@/lib/chains'
+import {
+	getChainByKey,
+	getChainEntries,
+	getTokenDecimals,
+	getTokensForChain,
+	getNativeToken,
+} from '@/lib/chains'
 import { useBridge, BridgeParams } from '@/hooks/useBridge'
 import { useSwapBridge, SwapBridgeParams } from '@/hooks/useSwapBridge'
 import { useSimpleBridge } from '@/hooks/useSimpleBridge'
@@ -165,7 +171,7 @@ const BridgeInterface = () => {
 		? {
 				// Use simple mock bridge hook for cross-token operations
 				...simpleBridgeHook,
-				
+
 				// Map required fields for compatibility
 				bridgeFee: null,
 				bridgeFeeFormatted: null,
@@ -176,7 +182,7 @@ const BridgeInterface = () => {
 				isMinAmountLoading: false,
 				meetsMinimumAmount: true,
 				transactionId: null,
-				
+
 				// Add mock swap bridge fields
 				currentStep: 'idle' as const,
 				isProcessing: simpleBridgeHook.isLoading,
@@ -226,12 +232,19 @@ const BridgeInterface = () => {
 	const selectedToken = useMemo(() => {
 		const selectedChain = getChainByKey(bridgeState.fromNetwork)
 		if (!selectedChain) return null
-		
-		const tokens = getTokensForChain ? getTokensForChain(selectedChain.chainId) : []
-		const nativeToken = getNativeToken ? getNativeToken(selectedChain.chainId) : null
+
+		const tokens = getTokensForChain
+			? getTokensForChain(selectedChain.chainId)
+			: []
+		const nativeToken = getNativeToken
+			? getNativeToken(selectedChain.chainId)
+			: null
 		const allTokens = nativeToken ? [nativeToken, ...tokens] : tokens
-		
-		return allTokens.find(token => token.tokenSymbol === bridgeState.fromToken) || null
+
+		return (
+			allTokens.find((token) => token.tokenSymbol === bridgeState.fromToken) ||
+			null
+		)
 	}, [bridgeState.fromNetwork, bridgeState.fromToken])
 
 	// Monitor approval transaction
@@ -261,7 +274,13 @@ const BridgeInterface = () => {
 				updateTransaction(pendingApproval.id, { hash: approvalTxHash })
 			}
 		}
-	}, [approvalTxHash, address, bridgeState.fromToken, getUserTransactions, updateTransaction])
+	}, [
+		approvalTxHash,
+		address,
+		bridgeState.fromToken,
+		getUserTransactions,
+		updateTransaction,
+	])
 
 	useEffect(() => {
 		if (txHash && address && transactionId) {
@@ -336,8 +355,8 @@ const BridgeInterface = () => {
 		if (isApprovalSuccess || bridgeSuccess) {
 			const timer = setTimeout(() => {
 				refetchBalance()
-			}, 2000); // Wait 2 seconds before refetching to avoid loops
-			return () => clearTimeout(timer);
+			}, 2000) // Wait 2 seconds before refetching to avoid loops
+			return () => clearTimeout(timer)
 		}
 	}, [isApprovalSuccess, bridgeSuccess, refetchBalance])
 
@@ -545,7 +564,9 @@ const BridgeInterface = () => {
 					<CompactNetworkTokenSelector
 						networkValue={bridgeState.fromNetwork}
 						tokenValue={bridgeState.fromToken}
-						onNetworkChange={(network) => updateBridgeState({ fromNetwork: network })}
+						onNetworkChange={(network) =>
+							updateBridgeState({ fromNetwork: network })
+						}
 						onTokenChange={(token) => updateBridgeState({ fromToken: token })}
 						label={t('bridge.selectSourceAsset')}
 						excludeChain={bridgeState.toNetwork}
@@ -582,7 +603,9 @@ const BridgeInterface = () => {
 								variant="ghost"
 								size="sm"
 								className="absolute right-2 top-1/2 transform -translate-y-1/2 text-lotus-pink hover:text-lotus-pink-dark"
-								onClick={() => updateBridgeState({ amount: fromTokenBalance || '0' })}
+								onClick={() =>
+									updateBridgeState({ amount: fromTokenBalance || '0' })
+								}
 							>
 								MAX
 							</Button>
@@ -675,7 +698,9 @@ const BridgeInterface = () => {
 					<CompactNetworkTokenSelector
 						networkValue={bridgeState.toNetwork}
 						tokenValue={bridgeState.toToken}
-						onNetworkChange={(network) => updateBridgeState({ toNetwork: network })}
+						onNetworkChange={(network) =>
+							updateBridgeState({ toNetwork: network })
+						}
 						onTokenChange={(token) => updateBridgeState({ toToken: token })}
 						label={t('bridge.selectTargetAsset')}
 						excludeChain={bridgeState.fromNetwork}
@@ -701,9 +726,11 @@ const BridgeInterface = () => {
 							<span className="ml-2 text-gray-500">{bridgeState.toToken}</span>
 						</div>
 						{isSwapBridgeOperation
-							? estimatedFinalAmount && simpleBridgeHook.exchangeRate && (
+							? estimatedFinalAmount &&
+							  simpleBridgeHook.exchangeRate && (
 									<div className="text-xs text-gray-500">
-										Exchange Rate: 1 {bridgeState.fromToken} = {simpleBridgeHook.exchangeRate} {bridgeState.toToken}
+										Exchange Rate: 1 {bridgeState.fromToken} ={' '}
+										{simpleBridgeHook.exchangeRate} {bridgeState.toToken}
 									</div>
 							  )
 							: bridgeState.amount &&
@@ -945,10 +972,7 @@ const BridgeInterface = () => {
 				<Button
 					onClick={handleBridge}
 					disabled={
-						!canBridge() ||
-						isBridging ||
-						needsApproval ||
-						isAllowanceLoading
+						!canBridge() || isBridging || needsApproval || isAllowanceLoading
 					}
 					className="w-full h-14 text-lg font-medium bg-gradient-to-r from-lotus-pink to-lotus-pink-dark hover:from-lotus-pink-dark hover:to-lotus-pink disabled:opacity-50 transition-all duration-300 backdrop-blur-md text-white"
 				>
