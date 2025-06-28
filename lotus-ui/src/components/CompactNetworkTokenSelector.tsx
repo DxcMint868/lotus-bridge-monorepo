@@ -189,14 +189,15 @@ const CompactNetworkTokenSelector: React.FC<
 						<div className="text-left">
 							<div className="flex items-center space-x-2">
 								<span className="font-semibold text-gray-900">
-									{selectedToken?.tokenSymbol || 'Select Token'}
+									{selectedToken?.tokenSymbol || t('selector.selectToken')}
 								</span>
 								<span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
-									{selectedChain?.chainName || 'Network'}
+									{selectedChain?.chainName || t('selector.network')}
 								</span>
 							</div>
 							<div className="text-sm text-gray-500">
-								{selectedToken?.tokenName || 'Choose network and token'}
+								{selectedToken?.tokenName ||
+									t('selector.chooseNetworkAndToken')}
 							</div>
 						</div>
 					</div>
@@ -213,7 +214,9 @@ const CompactNetworkTokenSelector: React.FC<
 
 				{/* Networks Grid Section */}
 				<div className="space-y-4">
-					<h3 className="text-sm font-medium text-gray-700">Select Network</h3>
+					<h3 className="text-sm font-medium text-gray-700">
+						{t('selector.selectNetwork')}
+					</h3>
 
 					{/* Networks Grid */}
 					<div className="grid grid-cols-4 gap-3">
@@ -252,7 +255,7 @@ const CompactNetworkTokenSelector: React.FC<
 							className="w-full border-gray-300 text-gray-600 hover:bg-gray-50"
 						>
 							<MoreHorizontal className="w-4 h-4 mr-2" />
-							View More Networks
+							{t('selector.viewMoreNetworks')}
 						</Button>
 					)}
 
@@ -262,7 +265,7 @@ const CompactNetworkTokenSelector: React.FC<
 							onClick={() => setShowAllNetworks(false)}
 							className="w-full border-gray-300 text-gray-600 hover:bg-gray-50"
 						>
-							Show Less
+							{t('selector.showLess')}
 						</Button>
 					)}
 				</div>
@@ -273,7 +276,9 @@ const CompactNetworkTokenSelector: React.FC<
 				{/* Tokens Section */}
 				<div className="space-y-4">
 					<div className="flex items-center justify-between">
-						<h3 className="text-sm font-medium text-gray-700">Select Token</h3>
+						<h3 className="text-sm font-medium text-gray-700">
+							{t('selector.selectAsset')}
+						</h3>
 						{selectedChain && (
 							<Badge variant="outline" className="text-xs">
 								{selectedChain.chainName}
@@ -284,21 +289,23 @@ const CompactNetworkTokenSelector: React.FC<
 					{!selectedChain ? (
 						<div className="text-center py-8 text-gray-600">
 							<div className="text-4xl mb-2">🌐</div>
-							<p className="font-semibold">Select a network first</p>
+							<p className="font-semibold">
+								{t('selector.selectNetworkFirst')}
+							</p>
 							<p className="text-sm">
-								Choose a network to see available tokens
+								{t('selector.chooseNetworkToSeeTokens')}
 							</p>
 						</div>
 					) : (
 						<>
 							{/* Search */}
 							<div className="relative">
-								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4 z-10 pointer-events-none" />
 								<Input
-									placeholder="Search tokens..."
+									placeholder={t('selector.searchAsset')}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className="pl-10 bg-white/60 backdrop-blur-sm border-pink-200 focus:border-pink-400 focus:bg-white/80 transition-all"
+									className="pl-10 bg-white/80 backdrop-blur-sm border border-gray-300 focus:border-pink-400 focus:bg-white focus:ring-1 focus:ring-pink-400 transition-all"
 								/>
 							</div>
 
@@ -309,10 +316,10 @@ const CompactNetworkTokenSelector: React.FC<
 									<div className="mb-4">
 										<div className="flex items-center space-x-2 mb-3">
 											<h4 className="font-semibold text-gray-800 text-sm">
-												Vietnamese Tokens
+												{t('selector.vietnameseTokens')}
 											</h4>
 											<Badge className="bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs">
-												Priority
+												{t('selector.priority')}
 											</Badge>
 										</div>
 										<div className="space-y-2">
@@ -345,7 +352,7 @@ const CompactNetworkTokenSelector: React.FC<
 													</div>
 													{tokenValue === token.tokenSymbol && (
 														<Badge className="bg-pink-500 text-white text-xs">
-															Selected
+															{t('selector.selected')}
 														</Badge>
 													)}
 												</button>
@@ -358,7 +365,7 @@ const CompactNetworkTokenSelector: React.FC<
 								{otherTokens.length > 0 && (
 									<div>
 										<h4 className="font-semibold text-gray-800 mb-3 text-sm">
-											Other Tokens
+											{t('selector.otherTokens')}
 										</h4>
 										<div className="space-y-2">
 											{otherTokens.map((token) => (
@@ -390,7 +397,7 @@ const CompactNetworkTokenSelector: React.FC<
 													</div>
 													{tokenValue === token.tokenSymbol && (
 														<Badge className="bg-gray-500 text-white text-xs">
-															Selected
+															{t('selector.selected')}
 														</Badge>
 													)}
 												</button>
@@ -402,8 +409,12 @@ const CompactNetworkTokenSelector: React.FC<
 								{filteredTokens.length === 0 && (
 									<div className="text-center py-8 text-gray-600">
 										<div className="text-4xl mb-2">🔍</div>
-										<p className="font-semibold">No tokens found</p>
-										<p className="text-sm">Try a different search term</p>
+										<p className="font-semibold">
+											{t('selector.noTokensFound')}
+										</p>
+										<p className="text-sm">
+											{t('selector.tryDifferentSearch')}
+										</p>
 									</div>
 								)}
 							</div>

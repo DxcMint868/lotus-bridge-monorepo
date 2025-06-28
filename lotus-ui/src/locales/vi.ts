@@ -39,6 +39,27 @@ export const vi = {
 		docs: "Tài liệu",
 	},
 
+	selector: {
+		selectSourceAsset: "Chọn Tài Sản Nguồn",
+		selectTargetAsset: "Chọn Tài Sản Đích",
+		selectNetwork: "Chọn Mạng Lưới",
+		selectAsset: "Chọn Tài Sản Số",
+		searchAsset: "Tìm kiếm Loại Tài Sản Số",
+		selectToken: "Chọn Token",
+		network: "Mạng",
+		chooseNetworkAndToken: "Chọn mạng và loại tài sản",
+		selectNetworkFirst: "Chọn mạng trước",
+		chooseNetworkToSeeTokens: "Chọn mạng để xem các loại tài sản có sẵn",
+		vietnameseTokens: "Token Việt Nam",
+		priority: "Ưu tiên",
+		otherTokens: "Token Khác",
+		selected: "Đã chọn",
+		noTokensFound: "Không tìm thấy loại tài sản",
+		tryDifferentSearch: "Thử từ khóa tìm kiếm khác",
+		viewMoreNetworks: "Xem Thêm Mạng",
+		showLess: "Thu Gọn",
+	},
+
 	// Bridge Interface
 	bridge: {
 		title: "Kết nối tài sản số",

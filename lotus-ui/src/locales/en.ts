@@ -37,6 +37,27 @@ export const en = {
 		docs: "Docs",
 	},
 
+	selector: {
+		selectSourceAsset: "Select Source Asset",
+		selectTargetAsset: "Select Target Asset",
+		selectNetwork: "Select Network",
+		selectAsset: "Select Asset",
+		searchAsset: "Search Asset",
+		selectToken: "Select Token",
+		network: "Network",
+		chooseNetworkAndToken: "Choose network and asset",
+		selectNetworkFirst: "Select a network first",
+		chooseNetworkToSeeTokens: "Choose a network to see available assets",
+		vietnameseTokens: "Vietnamese Assets",
+		priority: "Priority",
+		otherTokens: "Other Assets",
+		selected: "Selected",
+		noTokensFound: "No assets found",
+		tryDifferentSearch: "Try a different search term",
+		viewMoreNetworks: "View More Networks",
+		showLess: "Show Less",
+	},
+
 	// Bridge Interface
 	bridge: {
 		title: "Bridge Assets",
@@ -44,6 +65,7 @@ export const en = {
 			"Seamlessly bridge your assets across multiple blockchains with Vietnamese cultural elegance and cutting-edge DeFi technology.",
 		selectNetworksAndTokens:
 			"Select networks and tokens to bridge between different blockchains",
+		bridgeAssets: "Bridge Assets",
 		from: "From",
 		to: "To",
 		amount: "Amount",

@@ -568,7 +568,7 @@ const BridgeInterface = () => {
 							updateBridgeState({ fromNetwork: network })
 						}
 						onTokenChange={(token) => updateBridgeState({ fromToken: token })}
-						label={t('bridge.selectSourceAsset')}
+						label={t('selector.selectSourceAsset')}
 						excludeChain={bridgeState.toNetwork}
 					/>
 
@@ -702,7 +702,7 @@ const BridgeInterface = () => {
 							updateBridgeState({ toNetwork: network })
 						}
 						onTokenChange={(token) => updateBridgeState({ toToken: token })}
-						label={t('bridge.selectTargetAsset')}
+						label={t('selector.selectTargetAsset')}
 						excludeChain={bridgeState.fromNetwork}
 					/>
 

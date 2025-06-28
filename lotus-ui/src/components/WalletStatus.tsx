@@ -2,7 +2,7 @@ import { useAccount, useChainId, useBalance, useSwitchChain } from 'wagmi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+// import { Separator } from '@/components/ui/separator'
 import { useTranslation } from '@/contexts/LanguageContext'
 import { Wallet } from 'lucide-react'
 
@@ -120,9 +120,9 @@ const WalletStatus = () => {
 					</div>
 				</div>
 
-				<Separator />
+				{/* <Separator /> */}
 
-				<div className="space-y-2">
+				{/* <div className="space-y-2">
 					<div className="flex justify-between items-center text-xs text-muted-foreground">
 						<span>Chain ID:</span>
 						<span>{chainId}</span>
@@ -136,7 +136,7 @@ const WalletStatus = () => {
 					className="w-full text-xs"
 				>
 					{t('wallet.refreshBalance')}
-				</Button>
+				</Button> */}
 
 				{/* Network Switching */}
 				{/* <div className="space-y-2">
