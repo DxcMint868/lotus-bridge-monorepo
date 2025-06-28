@@ -117,8 +117,7 @@ export const vi = {
 	// Transaction History
 	transaction: {
 		history: "Lịch sử giao dịch",
-		historyDescription:
-			"Theo dõi các giao dịch cầu nối và phê duyệt của bạn",
+		historyDescription: "Theo dõi các giao dịch của bạn",
 		all: "Tất cả",
 		pending: "Đang chờ",
 		completed: "Hoàn thành",

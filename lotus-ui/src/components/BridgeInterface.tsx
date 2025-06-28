@@ -507,7 +507,7 @@ const BridgeInterface = () => {
 						<LotusIcon size={100} />
 					</div>
 					<span className="lotus-text-gradient">
-						{isSwapBridgeOperation ? 'Swap + Bridge' : t('bridge.title')}
+						{isSwapBridgeOperation ? 'Swap & Bridge' : t('bridge.title')}
 					</span>
 				</CardTitle>
 				<p className="text-sm text-muted-foreground mt-2">
