@@ -1,4 +1,4 @@
-# 1Matrix Monorepo
+# Lotus Bridge Monorepo
 
 This monorepo contains the following projects:
 
@@ -14,7 +14,7 @@ Each project has its own README and setup instructions in their respective direc
 ## Project Structure
 
 ```
-1matrix-monorepo/
+lotus-bridge-monorepo/
 ├── bridge-token-custom/     # Bridge token custom implementation
 ├── lotus-bridge-oft/        # Lotus bridge OFT contracts
 ├── lotus-landing-page/      # Lotus landing page
@@ -40,3 +40,8 @@ git subtree pull --prefix=lotus-landing-page origin main --squash
 git subtree pull --prefix=lotus-ui origin main --squash
 ```
 
+## Index
+Lotus official documentation: https://lotus-bridge-documentation.vercel.app/?fbclid=IwY2xjawLM1FJleHRuA2FlbQIxMQABHqzk2n7QBgzDyDfpCsaSwmL3gtWVN3qpEi1XWV_qKNY7Xz88oWBdIWa9y0hP_aem_BmOxT28DtF7I_obmfNbNmg  
+Lotus protocol architecture overview: https://github.com/DxcMint868/lotus-bridge-monorepo/edit/lotus-ui-map/architecture.MD  
+Lotus landing page: ...  
+Lotus dApp: ...  

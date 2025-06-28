@@ -204,7 +204,8 @@ LayerZero enables omnichain functionality by allowing each chain to communicate 
 
 ```mermaid
 graph TD
-    subgraph "Omnichain Network via LayerZero"
+    subgraph "Omnichain Network"
+        direction TD
         A[Chain A<br/>Bridge Contract]
         B[Chain B<br/>Bridge Contract]
         C[Chain C<br/>Bridge Contract]
