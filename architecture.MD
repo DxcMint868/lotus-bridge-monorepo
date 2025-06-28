@@ -4,7 +4,7 @@ _Omnichain Liquidity Bridging and Messaging Protocol_
 
 **Version:** 0.1  
 **Status:** Living Document (constantly updated to reflect the most up-to-date protocol technical changes)  
-**Last Updated:** June 28, 2025  
+**Last Updated:** June 28, 2025
 
 ---
 
@@ -180,10 +180,11 @@ The bridge must source its tokens from somewhere. The protocol dynamically choos
 
 - **Liquidity Pool Mechanism (For High-Volume Routes)**: For major corridors (e.g., ETH-USDC), the protocol can also use traditional liquidity pools. A user's deposit on the source chain is matched with a withdrawal from a pool on the destination chain. This allows users to receive a native asset (e.g., native USDC instead of `loUSDC`), which can be a better user experience, but it requires significant upfront capital to fund the pools.
 
-By combining intelligent routing with this hybrid execution layer, the protocol offers a system 
+By combining intelligent routing with this hybrid execution layer, the protocol offers a system
 that is simultaneously powerful, flexible, and simple for the end-user.
 
 ```mermaid
+sequenceDiagram
     actor User
     participant SourceChain as Source Chain (e.g., Ethereum)
     participant Messaging as Messaging Layer (LayerZero or LMB)
@@ -263,12 +264,10 @@ By combining intelligent routing with this hybrid execution layer, the protocol 
 
 The protocol's foundation is the use of a single, stable medium token, **VNST**, for all cross-chain operations. This design choice is strategic:
 
-
 - **Simplified Liquidity**: Instead of needing pools for every token pair (e.g., A-B, A-C, B-C), we only need pools for each token against VNST (A-VNST, B-VNST, C-VNST). This dramatically reduces the amount of liquidity required.
 - **Stable Value**: Using a stablecoin minimizes the price volatility risk for users during the bridging process.
 
 To function across multiple chains, VNST exists in two forms:
-
 
 - **Native VNST**: The official VNST token on its origin chain (e.g., Ethereum).
 - **Lotus VNST (loVNST)**: A synthetic, platform-branded version of VNST deployed on other chains. This token is created using a strict 1:1 backing mechanism, where each `loVNST` is backed by one native VNST locked in the bridge contract on the origin chain.
@@ -400,6 +399,7 @@ The Lotus Message Bus is currently in the design and early prototyping phase. Ou
 This dual-pronged approach gives us the best of both worlds: the proven security and scale of a global leader, and the strategic flexibility and sovereignty of our own custom-built solution. It is a technical manifestation of our core vision: to build a bridge that not only connects worlds but also elevates our own.
 
 ---
+
 While LayerZero provides a robust and secure foundation for mainstream chains, our vision of deeply cultivating the Vietnamese DeFi ecosystem requires a more tailored approach. Many promising Vietnamese blockchains are still in their nascent stages and not yet integrated into large-scale messaging infrastructures. To leave them disconnected would be a disservice to our mission.
 
 This is why we are architecting the **Lotus Message Bus (LMB)**: a sovereign, extensible, and secure communication layer designed by us, for us.
@@ -675,6 +675,7 @@ By embedding these advantages at the protocol level, we aim to create a powerful
 ---
 
 ## High-level Smart Contract Architecture
+
 ### 6.2. Fee Structure & Value Accrual
 
 The protocol generates revenue through a small, dynamic fee on each bridge transaction. This fee is a critical component of the flywheel, designed to be competitive for users while sustainably funding the ecosystem.
@@ -734,15 +735,12 @@ The contract architecture is designed to be modular and upgradable.
 ```mermaid
 classDiagram
     class LotusVNSTBridgeCore {
-    class LotusVNSTBridgeCore {
       +initiateBridgeAndSwap()
       +emergencyPause()
     }
     class LotusSwapEngine {
-    class LotusSwapEngine {
       +executeSwap()
     }
-    class LotusLiquidityManager {
     class LotusLiquidityManager {
       +stakeLPTokens()
       +claimRewards()
