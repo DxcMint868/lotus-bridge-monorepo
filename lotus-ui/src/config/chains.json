@@ -63,7 +63,7 @@
 				"decimals": 18
 			},
 			"KNC": {
-				"address": "0xa445BbDF9916bB80eEDFCAE1A698191ef082F3C7",
+				"address": "0xa445bbdf9916bb80eedfcae1a698191ef082f3c7",
 				"image": "/token-icons/knc.png",
 				"name": "Kyber Network Crystal",
 				"decimals": 18

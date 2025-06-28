@@ -66,11 +66,9 @@ const Header = () => {
 							</svg>
 						</div>
 						<div>
-							<h1 className="text-2xl font-bold lotus-text-gradient">
-								Lotus Bridge
-							</h1>
+							<h1 className="text-2xl font-bold text-[#26282A]">Lotus Bridge</h1>
 							<p className="text-xs text-muted-foreground hidden sm:block">
-								Vietnamese Multichain Bridge
+								{t('header.subtitle')}
 							</p>
 						</div>
 					</div>

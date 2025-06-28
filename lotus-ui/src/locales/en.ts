@@ -31,6 +31,7 @@ export const en = {
 	// Header
 	header: {
 		bridge: "Bridge",
+		subtitle: "vietnamese Omnichain	Bridge",
 		transactions: "Transactions",
 		pools: "Pools",
 		docs: "Docs",

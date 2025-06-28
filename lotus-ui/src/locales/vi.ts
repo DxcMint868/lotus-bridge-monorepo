@@ -32,6 +32,7 @@ export const vi = {
 
 	// Header
 	header: {
+		subtitle: "Cầu nối đa chuỗi Việt Nam",
 		bridge: "Cầu nối",
 		transactions: "Giao dịch",
 		pools: "Pools",

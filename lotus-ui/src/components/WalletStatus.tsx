@@ -139,7 +139,7 @@ const WalletStatus = () => {
 				</Button>
 
 				{/* Network Switching */}
-				<div className="space-y-2">
+				{/* <div className="space-y-2">
 					<h4 className="text-xs font-medium">{t('wallet.switchNetwork')}:</h4>
 					<div className="grid grid-cols-1 gap-1">
 						{chains.slice(0, 4).map((chain) => (
@@ -155,7 +155,7 @@ const WalletStatus = () => {
 							</Button>
 						))}
 					</div>
-				</div>
+				</div> */}
 			</CardContent>
 		</Card>
 	)

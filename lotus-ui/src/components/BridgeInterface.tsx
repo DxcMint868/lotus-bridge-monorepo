@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
-import TokenSelector from './TokenSelector'
-import NetworkBridgeSelector from './NetworkBridgeSelector'
+import CompactNetworkTokenSelector from './CompactNetworkTokenSelector'
 import TransactionDetails from './TransactionDetails'
 import AdvancedOptions from './AdvancedOptions'
 import AccountSelector from './AccountSelector'
@@ -18,7 +17,7 @@ import {
 	RefreshCw,
 } from 'lucide-react'
 import { useSwitchChain, useChainId, useAccount } from 'wagmi'
-import { getChainByKey, getChainEntries, getTokenDecimals } from '@/lib/chains'
+import { getChainByKey, getChainEntries, getTokenDecimals, getTokensForChain, getNativeToken } from '@/lib/chains'
 import { useBridge, BridgeParams } from '@/hooks/useBridge'
 import { useSwapBridge, SwapBridgeParams } from '@/hooks/useSwapBridge'
 import { useSimpleBridge } from '@/hooks/useSimpleBridge'
@@ -222,6 +221,18 @@ const BridgeInterface = () => {
 		isLoading: isBalanceLoading,
 		refetch: refetchBalance,
 	} = useTokenBalance(bridgeState.fromNetwork, bridgeState.fromToken)
+
+	// Get selected token data for display
+	const selectedToken = useMemo(() => {
+		const selectedChain = getChainByKey(bridgeState.fromNetwork)
+		if (!selectedChain) return null
+		
+		const tokens = getTokensForChain ? getTokensForChain(selectedChain.chainId) : []
+		const nativeToken = getNativeToken ? getNativeToken(selectedChain.chainId) : null
+		const allTokens = nativeToken ? [nativeToken, ...tokens] : tokens
+		
+		return allTokens.find(token => token.tokenSymbol === bridgeState.fromToken) || null
+	}, [bridgeState.fromNetwork, bridgeState.fromToken])
 
 	// Monitor approval transaction
 	useTransactionMonitor({
@@ -531,24 +542,14 @@ const BridgeInterface = () => {
 					<Label className="text-base font-medium text-gray-900">
 						{t('bridge.from')}
 					</Label>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<NetworkBridgeSelector
-							value={bridgeState.fromNetwork}
-							onChange={(network) =>
-								updateBridgeState({ fromNetwork: network })
-							}
-							label={t('bridge.sourceNetwork')}
-							excludeChain={bridgeState.toNetwork}
-						/>
-						<TokenSelector
-							networkChainId={
-								getChainByKey(bridgeState.fromNetwork)?.chainId || 0
-							}
-							value={bridgeState.fromToken}
-							onChange={(token) => updateBridgeState({ fromToken: token })}
-							label={t('bridge.sourceToken')}
-						/>
-					</div>
+					<CompactNetworkTokenSelector
+						networkValue={bridgeState.fromNetwork}
+						tokenValue={bridgeState.fromToken}
+						onNetworkChange={(network) => updateBridgeState({ fromNetwork: network })}
+						onTokenChange={(token) => updateBridgeState({ fromToken: token })}
+						label={t('bridge.selectSourceAsset')}
+						excludeChain={bridgeState.toNetwork}
+					/>
 
 					<div className="space-y-2">
 						<div className="flex justify-between items-center">
@@ -564,7 +565,7 @@ const BridgeInterface = () => {
 								{isBalanceLoading
 									? t('bridge.loading')
 									: `${t('bridge.balance')}: ${parseFloat(
-											fromTokenBalance
+											fromTokenBalance || '0'
 									  ).toFixed(6)} ${bridgeState.fromToken}`}
 							</Button>
 						</div>
@@ -575,13 +576,13 @@ const BridgeInterface = () => {
 								placeholder="0.0"
 								value={bridgeState.amount}
 								onChange={(e) => updateBridgeState({ amount: e.target.value })}
-								className="text-2xl font-medium h-14 pr-20 bg-white/60 border-pink-200 focus:border-pink-400 focus:bg-white/80 transition-all backdrop-blur-sm"
+								className="text-2xl font-medium h-14 pr-20"
 							/>
 							<Button
 								variant="ghost"
 								size="sm"
-								className="absolute right-2 top-1/2 transform -translate-y-1/2 text-lotus-pink hover:text-lotus-pink-dark hover:bg-white/20 backdrop-blur-sm"
-								onClick={() => updateBridgeState({ amount: fromTokenBalance })}
+								className="absolute right-2 top-1/2 transform -translate-y-1/2 text-lotus-pink hover:text-lotus-pink-dark"
+								onClick={() => updateBridgeState({ amount: fromTokenBalance || '0' })}
 							>
 								MAX
 							</Button>
@@ -652,14 +653,17 @@ const BridgeInterface = () => {
 				)}
 
 				{/* Swap Button */}
-				<div className="flex justify-center">
+				<div className="flex justify-center relative">
+					<div className="absolute inset-0 flex items-center">
+						<div className="w-full border-t border-gray-200"></div>
+					</div>
 					<Button
 						variant="outline"
 						size="icon"
 						onClick={swapNetworks}
-						className="rounded-full border-pink-200 hover:bg-pink-50 lotus-float"
+						className="relative bg-white border-2 border-pink-300 rounded-full w-12 h-12 hover:bg-pink-50 hover:border-pink-400 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
 					>
-						<ArrowDown className="h-4 w-4 text-lotus-pink-light" />
+						<ArrowDown className="h-5 w-5 text-pink-600" />
 					</Button>
 				</div>
 
@@ -668,22 +672,14 @@ const BridgeInterface = () => {
 					<Label className="text-base font-medium text-gray-900">
 						{t('bridge.to')}
 					</Label>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<NetworkBridgeSelector
-							value={bridgeState.toNetwork}
-							onChange={(network) => updateBridgeState({ toNetwork: network })}
-							label={t('bridge.targetNetwork')}
-							excludeChain={bridgeState.fromNetwork}
-						/>
-						<TokenSelector
-							networkChainId={
-								getChainByKey(bridgeState.toNetwork)?.chainId || 0
-							}
-							value={bridgeState.toToken}
-							onChange={(token) => updateBridgeState({ toToken: token })}
-							label={t('bridge.targetToken')}
-						/>
-					</div>
+					<CompactNetworkTokenSelector
+						networkValue={bridgeState.toNetwork}
+						tokenValue={bridgeState.toToken}
+						onNetworkChange={(network) => updateBridgeState({ toNetwork: network })}
+						onTokenChange={(token) => updateBridgeState({ toToken: token })}
+						label={t('bridge.selectTargetAsset')}
+						excludeChain={bridgeState.fromNetwork}
+					/>
 
 					<div className="space-y-2">
 						<Label>
@@ -749,7 +745,6 @@ const BridgeInterface = () => {
 									onChange={(e) =>
 										updateBridgeState({ recipient: e.target.value })
 									}
-									className="bg-white/60 border-pink-200 focus:border-pink-400 focus:bg-white/80 transition-all backdrop-blur-sm"
 								/>
 								<AccountSelector
 									onSelectAccount={(address) =>
@@ -926,7 +921,7 @@ const BridgeInterface = () => {
 					<Button
 						onClick={handleApprove}
 						disabled={!canBridge() || isApproving || isAllowanceLoading}
-						className="w-full h-14 text-lg font-medium bg-yellow-500 hover:bg-yellow-600 text-white disabled:opacity-50 backdrop-blur-md"
+						className="w-full h-14 text-lg font-medium bg-pink-300 hover:bg-pink-400 text-white disabled:opacity-50 backdrop-blur-md"
 					>
 						{isApproving ? (
 							<div className="flex items-center space-x-2">
