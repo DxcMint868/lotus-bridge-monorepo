@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,8 @@ import {
 	Zap,
 	Layers,
 	Circle,
-	Activity
+	Activity,
+	History
 } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { useTransactions, Transaction } from '@/contexts/TransactionContext'
@@ -52,29 +53,29 @@ const TransactionHistory = () => {
 		switch (status) {
 			case 'pending':
 				return (
-					<Badge className="bg-yellow-100 text-yellow-700 flex items-center gap-1">
-						<Clock className="w-3 h-3" />
+					<Badge className="bg-amber-50/80 text-amber-700 border-amber-200/50 backdrop-blur-sm font-medium">
+						<Clock className="w-3 h-3 mr-1" />
 						{t('transaction.pending')}
 					</Badge>
 				)
 			case 'completed':
 				return (
-					<Badge className="bg-lotus-green text-white flex items-center gap-1">
-						<CheckCircle className="w-3 h-3" />
+					<Badge className="bg-emerald-50/80 text-emerald-700 border-emerald-200/50 backdrop-blur-sm font-medium">
+						<CheckCircle className="w-3 h-3 mr-1" />
 						{t('transaction.completed')}
 					</Badge>
 				)
 			case 'failed':
 				return (
-					<Badge className="bg-red-100 text-red-700 flex items-center gap-1">
-						<XCircle className="w-3 h-3" />
+					<Badge className="bg-red-50/80 text-red-700 border-red-200/50 backdrop-blur-sm font-medium">
+						<XCircle className="w-3 h-3 mr-1" />
 						{t('transaction.failed')}
 					</Badge>
 				)
 			default:
 				return (
-					<Badge variant="secondary" className="flex items-center gap-1">
-						<Activity className="w-3 h-3" />
+					<Badge className="bg-gray-50/80 text-gray-700 border-gray-200/50 backdrop-blur-sm font-medium">
+						<Activity className="w-3 h-3 mr-1" />
 						{status}
 					</Badge>
 				)
@@ -85,17 +86,35 @@ const TransactionHistory = () => {
 		const networkName = network.toLowerCase()
 		
 		if (networkName.includes('ethereum') || networkName.includes('sepolia')) {
-			return <Layers className="w-5 h-5 text-blue-600" />
+			return (
+				<div className="w-8 h-8 rounded-full bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 flex items-center justify-center">
+					<Layers className="w-4 h-4 text-blue-600" />
+				</div>
+			)
 		} else if (networkName.includes('bsc')) {
-			return <Zap className="w-5 h-5 text-yellow-600" />
+			return (
+				<div className="w-8 h-8 rounded-full bg-yellow-50/80 backdrop-blur-sm border border-yellow-200/50 flex items-center justify-center">
+					<Zap className="w-4 h-4 text-yellow-600" />
+				</div>
+			)
 		} else if (networkName.includes('polygon')) {
-			return <Shield className="w-5 h-5 text-purple-600" />
-		} else if (networkName.includes('arbitrum')) {
-			return <Circle className="w-5 h-5 text-blue-500" />
+			return (
+				<div className="w-8 h-8 rounded-full bg-purple-50/80 backdrop-blur-sm border border-purple-200/50 flex items-center justify-center">
+					<Shield className="w-4 h-4 text-purple-600" />
+				</div>
+			)
 		} else if (networkName.includes('base')) {
-			return <Circle className="w-5 h-5 text-blue-700" />
+			return (
+				<div className="w-8 h-8 rounded-full bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 flex items-center justify-center">
+					<Circle className="w-4 h-4 text-blue-700" />
+				</div>
+			)
 		} else {
-			return <ArrowRightLeft className="w-5 h-5 text-gray-600" />
+			return (
+				<div className="w-8 h-8 rounded-full bg-gray-50/80 backdrop-blur-sm border border-gray-200/50 flex items-center justify-center">
+					<ArrowRightLeft className="w-4 h-4 text-gray-600" />
+				</div>
+			)
 		}
 	}
 
@@ -127,180 +146,201 @@ const TransactionHistory = () => {
 	}
 
 	return (
-		<Card className="lotus-card">
-			<CardHeader>
-				<CardTitle className="lotus-text-gradient">
-					{t('transaction.history')}
-				</CardTitle>
-				<p className="text-sm text-muted-foreground">
-					{t('transaction.historyDescription')}
-				</p>
-			</CardHeader>
-			<CardContent>
-				<Tabs value={filter} onValueChange={(value) => setFilter(value as any)}>
-					<TabsList className="grid w-full grid-cols-4 bg-pink-50">
-						<TabsTrigger value="all" className="data-[state=active]:bg-white">
-							{t('transaction.all')}
-						</TabsTrigger>
-						<TabsTrigger
-							value="pending"
-							className="data-[state=active]:bg-white"
-						>
-							{t('transaction.pending')}
-						</TabsTrigger>
-						<TabsTrigger
-							value="completed"
-							className="data-[state=active]:bg-white"
-						>
-							{t('transaction.completed')}
-						</TabsTrigger>
-						<TabsTrigger
-							value="failed"
-							className="data-[state=active]:bg-white"
-						>
-							{t('transaction.failed')}
-						</TabsTrigger>
-					</TabsList>
+		<div className="relative">
+			{/* Background decorative elements */}
+			<div className="absolute inset-0 opacity-30 pointer-events-none overflow-hidden rounded-2xl">
+				<div className="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-blue-200/40 to-purple-200/40 rounded-full blur-3xl"></div>
+				<div className="absolute bottom-16 left-8 w-24 h-24 bg-gradient-to-br from-pink-200/40 to-orange-200/40 rounded-full blur-2xl"></div>
+			</div>
 
-					<TabsContent value={filter} className="mt-6">
-						{/* Scrollable container with fixed height */}
-						<div className="h-96 overflow-y-auto pr-2 transaction-scroll">
-							<div className="space-y-3">
+			<Card className="relative bg-white/70 backdrop-blur-xl border-white/50 shadow-xl rounded-2xl overflow-hidden">
+				<CardHeader className="bg-gradient-to-r from-white/60 to-white/40 backdrop-blur-sm border-b border-white/30">
+					<div className="flex items-center space-x-3">
+						<div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400/20 to-purple-500/20 backdrop-blur-sm border border-pink-200/50 flex items-center justify-center">
+							<History className="w-5 h-5 text-pink-600" />
+						</div>
+						<div>
+							<CardTitle className="text-xl font-semibold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+								{t('transaction.history')}
+							</CardTitle>
+							<p className="text-sm text-gray-600/80 mt-1">
+								{t('transaction.historyDescription')}
+							</p>
+						</div>
+					</div>
+				</CardHeader>
+
+				<CardContent className="p-6">
+					<Tabs value={filter} onValueChange={(value) => setFilter(value as any)}>
+						<TabsList className="grid w-full grid-cols-4 bg-white/30 backdrop-blur-sm rounded-xl border border-white/40 p-1">
+							<TabsTrigger 
+								value="all" 
+								className="data-[state=active]:bg-white/80 data-[state=active]:shadow-sm rounded-lg font-medium transition-all duration-200"
+							>
+								{t('transaction.all')}
+							</TabsTrigger>
+							<TabsTrigger
+								value="pending"
+								className="data-[state=active]:bg-white/80 data-[state=active]:shadow-sm rounded-lg font-medium transition-all duration-200"
+							>
+								{t('transaction.pending')}
+							</TabsTrigger>
+							<TabsTrigger
+								value="completed"
+								className="data-[state=active]:bg-white/80 data-[state=active]:shadow-sm rounded-lg font-medium transition-all duration-200"
+							>
+								{t('transaction.completed')}
+							</TabsTrigger>
+							<TabsTrigger
+								value="failed"
+								className="data-[state=active]:bg-white/80 data-[state=active]:shadow-sm rounded-lg font-medium transition-all duration-200"
+							>
+								{t('transaction.failed')}
+							</TabsTrigger>
+						</TabsList>
+
+						<TabsContent value={filter} className="mt-6">
+							{/* Improved scrollable container */}
+							<div className="h-[400px] overflow-y-auto pr-2 space-y-3 scrollbar-thin scrollbar-thumb-pink-300/50 scrollbar-track-transparent">
 								{!address ? (
-									<div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
-										<ArrowRightLeft className="w-8 h-8 text-gray-300" />
-										{t('transaction.connectWalletToSee')}
+									<div className="text-center py-16 flex flex-col items-center space-y-4">
+										<div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-100/50 to-gray-200/30 backdrop-blur-sm border border-gray-200/30 flex items-center justify-center">
+											<ArrowRightLeft className="w-8 h-8 text-gray-400" />
+										</div>
+										<div className="space-y-2">
+											<p className="font-medium text-gray-600">
+												{t('transaction.connectWalletToSee')}
+											</p>
+											<p className="text-sm text-gray-500">
+												Connect your wallet to view transaction history
+											</p>
+										</div>
 									</div>
 								) : filteredTransactions.length === 0 ? (
-									<div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
-										<Activity className="w-8 h-8 text-gray-300" />
-										{t('transaction.noTransactions', {
-											filter: filter !== 'all' ? t(`transaction.${filter}`) : '',
-										})}
+									<div className="text-center py-16 flex flex-col items-center space-y-4">
+										<div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-100/50 to-gray-200/30 backdrop-blur-sm border border-gray-200/30 flex items-center justify-center">
+											<Activity className="w-8 h-8 text-gray-400" />
+										</div>
+										<div className="space-y-2">
+											<p className="font-medium text-gray-600">
+												{t('transaction.noTransactions', {
+													filter: filter !== 'all' ? t(`transaction.${filter}`) : '',
+												})}
+											</p>
+											<p className="text-sm text-gray-500">
+												Your transactions will appear here
+											</p>
+										</div>
 									</div>
 								) : (
 									filteredTransactions.map((transaction) => (
 										<div
 											key={transaction.id}
-											className="p-4 border border-pink-100 rounded-lg hover:border-pink-300 transition-all duration-200 hover:shadow-sm bg-white/50 backdrop-blur-sm"
+											className="group relative bg-white/60 backdrop-blur-md border border-white/50 rounded-xl p-4 hover:bg-white/70 hover:border-white/70 transition-all duration-300 hover:shadow-lg hover:shadow-black/5"
 										>
-											<div className="flex items-center justify-between mb-3">
-												<div className="flex items-center space-x-2">
+											{/* Status and time header */}
+											<div className="flex items-center justify-between mb-4">
+												<div className="flex items-center space-x-3">
 													{getStatusBadge(transaction.status)}
-													<span className="text-sm text-gray-500">
+													<span className="text-sm text-gray-500/80 font-medium">
 														{formatTime(transaction.timestamp)}
 													</span>
-													{transaction.type === 'approval' && (
-														<Badge variant="outline" className="text-xs flex items-center gap-1">
-															<Shield className="w-3 h-3" />
-															{t('transaction.approval')}
-														</Badge>
-													)}
 												</div>
-												{transaction.status === 'pending' &&
-													transaction.estimatedTime && (
-														<span className="text-sm text-lotus-pink-light font-medium flex items-center gap-1">
-															<Clock className="w-3 h-3" />
-															~{transaction.estimatedTime}
-														</span>
-													)}
+												{transaction.status === 'pending' && transaction.estimatedTime && (
+													<div className="flex items-center space-x-1 text-amber-600 bg-amber-50/50 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-200/30">
+														<Clock className="w-3 h-3" />
+														<span className="text-xs font-medium">~{transaction.estimatedTime}</span>
+													</div>
+												)}
 											</div>
 
-										<div className="flex items-center justify-between">
-											<div className="flex items-center space-x-3">
-												<div className="flex-shrink-0">
+											{/* Main transaction info */}
+											<div className="flex items-center justify-between">
+												<div className="flex items-center space-x-4">
 													{getNetworkIcon(transaction.fromNetwork)}
-												</div>
-												<div className="flex-grow">
-													<div className="font-medium text-gray-900 flex items-center gap-2">
-														<span>{transaction.amountFormatted} {transaction.fromToken}</span>
-														{transaction.fee && (
-															<span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-																{t('transaction.fee')}: {transaction.fee}
+													
+													<div className="flex-1">
+														<div className="flex items-center space-x-2 mb-1">
+															<span className="font-semibold text-gray-900">
+																{transaction.amountFormatted} {transaction.fromToken}
 															</span>
-														)}
-													</div>
-													<div className="text-sm text-gray-500 capitalize flex items-center gap-1">
-														{transaction.type === 'approval' ? (
-															<>
-																<Shield className="w-3 h-3" />
-																{t('transaction.approvalFor', {
-																	token: transaction.fromToken,
-																})}
-															</>
-														) : (
-															<>
-																<ArrowRightLeft className="w-3 h-3" />
-																{transaction.fromNetwork} → {transaction.toNetwork}
-															</>
-														)}
-													</div>
-													{transaction.recipient &&
-														transaction.recipient !==
-															transaction.userAddress && (
-															<div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-																<ArrowRightLeft className="w-3 h-3" />
-																{t('transaction.to')}: {formatAddress(transaction.recipient)}
+															{transaction.fee && (
+																<span className="text-xs text-gray-500 bg-gray-100/60 backdrop-blur-sm px-2 py-1 rounded-md border border-gray-200/30">
+																	Fee: {transaction.fee}
+																</span>
+															)}
+														</div>
+														
+														<div className="flex items-center space-x-2 text-sm text-gray-600">
+															{transaction.type === 'approval' ? (
+																<>
+																	<Shield className="w-3 h-3" />
+																	<span>{t('transaction.approvalFor', { token: transaction.fromToken })}</span>
+																</>
+															) : (
+																<>
+																	<ArrowRightLeft className="w-3 h-3" />
+																	<span>{transaction.fromNetwork} → {transaction.toNetwork}</span>
+																</>
+															)}
+														</div>
+
+														{transaction.recipient && transaction.recipient !== transaction.userAddress && (
+															<div className="flex items-center space-x-1 text-xs text-gray-500 mt-1">
+																<span>To:</span>
+																<span className="font-mono">{formatAddress(transaction.recipient)}</span>
 															</div>
 														)}
+													</div>
+												</div>
+
+												{/* Action buttons */}
+												<div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+													{transaction.hash && (
+														<Button
+															variant="ghost"
+															size="sm"
+															className="h-8 w-8 p-0 hover:bg-white/80 backdrop-blur-sm transition-all rounded-lg border border-transparent hover:border-white/50"
+															onClick={() => handleCopyTxId(transaction.id, transaction.hash)}
+														>
+															{copiedTx === transaction.id ? (
+																<Check className="w-4 h-4 text-emerald-600" />
+															) : (
+																<Copy className="w-4 h-4 text-gray-500" />
+															)}
+														</Button>
+													)}
+													{getExplorerUrl(transaction) && (
+														<Button
+															variant="ghost"
+															size="sm"
+															className="h-8 px-3 text-xs hover:bg-white/80 backdrop-blur-sm transition-all rounded-lg border border-transparent hover:border-white/50 text-gray-600 hover:text-gray-800"
+															onClick={() => window.open(getExplorerUrl(transaction)!, '_blank')}
+														>
+															<ExternalLink className="w-3 h-3 mr-1" />
+															View
+														</Button>
+													)}
 												</div>
 											</div>
 
-											<div className="flex items-center space-x-2">
-												{transaction.hash && (
-													<Button
-														variant="ghost"
-														size="sm"
-														className="h-8 w-8 p-0 hover:bg-pink-100/50 backdrop-blur-sm transition-all rounded-full"
-														onClick={() =>
-															handleCopyTxId(transaction.id, transaction.hash)
-														}
-													>
-														{copiedTx === transaction.id ? (
-															<Check className="w-4 h-4 text-green-600" />
-														) : (
-															<Copy className="w-4 h-4 text-gray-500 hover:text-gray-700" />
-														)}
-													</Button>
-												)}
-												{getExplorerUrl(transaction) && (
-													<Button
-														variant="ghost"
-														size="sm"
-														className="text-lotus-pink-light hover:text-lotus-pink-dark text-xs px-3 h-8 hover:bg-pink-100/50 backdrop-blur-sm transition-all rounded-full"
-														onClick={() =>
-															window.open(
-																getExplorerUrl(transaction)!,
-																'_blank'
-															)
-														}
-													>
-														<ExternalLink className="w-3 h-3 mr-1" />
-														{t('transaction.view')}
-													</Button>
-												)}
-											</div>
+											{/* Progress bar for pending transactions */}
+											{transaction.status === 'pending' && (
+												<div className="mt-4">
+													<div className="w-full bg-amber-100/50 backdrop-blur-sm rounded-full h-1.5 border border-amber-200/30">
+														<div className="bg-gradient-to-r from-amber-400/80 to-orange-400/80 h-1.5 rounded-full animate-pulse transition-all duration-500" style={{ width: '65%' }} />
+													</div>
+												</div>
+											)}
 										</div>
-
-										{transaction.status === 'pending' && (
-											<div className="mt-3">
-												<div className="w-full bg-pink-100 rounded-full h-2">
-													<div
-														className="bg-gradient-to-r from-lotus-pink to-lotus-pink-light h-2 rounded-full animate-pulse transition-all duration-300"
-														style={{ width: '65%' }}
-													/>
-												</div>
-											</div>
-										)}
-									</div>
-								))
-							)}
-						</div>
-					</div>
-					</TabsContent>
-				</Tabs>
-			</CardContent>
-		</Card>
+									))
+								)}
+							</div>
+						</TabsContent>
+					</Tabs>
+				</CardContent>
+			</Card>
+		</div>
 	)
 }
 
