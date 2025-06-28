@@ -8,6 +8,29 @@ _Omnichain Liquidity Bridging and Messaging Protocol_
 
 ---
 
+## Table of Contents
+
+1.  [Introduction](#1-introduction)
+    - [1.1. The Vision: Vietnam's Gateway to the Interchain](#11-the-vision-vietnams-gateway-to-the-interchain)
+    - [1.2. Executive Summary](#12-executive-summary)
+    - [1.3. Target Audience](#13-target-audience)
+2.  [System Architecture](#2-system-architecture)
+3.  [The Core Engine: Intelligent Routing & Hybrid Bridging](#the-core-engine-intelligent-routing--hybrid-bridging)
+4.  [Core Components](#core-components)
+5.  [LayerZero Integration](#layerzero-integration)
+    - [The Lotus Message Bus: A Sovereign Communication Layer](#the-lotus-message-bus-a-sovereign-communication-layer)
+6.  [Automated Market Maker (AMM) Integration](#automated-market-maker-amm-integration)
+    - [User Price Protection & Slippage Control](#user-price-protection--slippage-control)
+7.  [Economic Model & Sustainability](#6-economic-model--sustainability)
+    - [6.1. The Liquidity Flywheel: A Three-Pillar Approach](#61-the-liquidity-flywheel-a-three-pillar-approach)
+    - [6.2. Fee Structure & Value Accrual](#62-fee-structure--value-accrual)
+8.  [Our North Star: Cultivating Vietnam's DeFi Renaissance](#our-north-star-cultivating-vietnams-defi-renaissance)
+9.  [Smart Contract Architecture](#smart-contract-architecture)
+10. [Security Considerations](#security-considerations)
+11. [Deployment Strategy](#deployment-strategy)
+
+---
+
 ## 1. Introduction
 
 ### 1.1. The Vision: Vietnam's Gateway to the Interchain
