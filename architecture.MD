@@ -2,9 +2,9 @@
 
 _Omnichain Liquidity Bridging and Messaging Protocol_
 
-**Version:** 0.1
-**Status:** Living Document (constantly updated to reflect the most up-to-date protocol technical changes)
-**Last Updated:** June 28, 2025
+**Version:** 0.1  
+**Status:** Living Document (constantly updated to reflect the most up-to-date protocol technical changes)  
+**Last Updated:** June 28, 2025  
 
 ---
 
