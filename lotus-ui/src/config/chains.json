@@ -174,5 +174,275 @@
 			"KNC": "0x6C8B5795C4bF51E2f32CBc331C7dE0f2C6Cd567E",
 			"KAI": "0xa15faD49027100a8957463Ac1E29Be724670419f"
 		}
+	},
+	"1": {
+		"chainId": 1,
+		"chainName": "Ethereum Mainnet",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/ethereum.png",
+		"bridgeFee": "2000000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+		"positionManagerContract": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+		"uniswapV3FactoryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+		"quoterV2Contract": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 6
+			},
+			"USDC": {
+				"address": "0xA0b86a33E6441fA0A8b8F50FfDA6eb95d4b8b46D",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"8453": {
+		"chainId": 8453,
+		"chainName": "Base",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/base.png",
+		"bridgeFee": "1500000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0x2626664c2603336E57B271c5C0b26F421741e481",
+		"positionManagerContract": "0x03a520b32C04BF3bEEf7BF5e2F3C75e4C4c1f7c4",
+		"uniswapV3FactoryContract": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+		"quoterV2Contract": "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDC": {
+				"address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"137": {
+		"chainId": 137,
+		"chainName": "Polygon",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/polygon.png",
+		"bridgeFee": "500000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+		"positionManagerContract": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+		"uniswapV3FactoryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+		"quoterV2Contract": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 6
+			},
+			"USDC": {
+				"address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"80001": {
+		"chainId": 80001,
+		"chainName": "Polygon Mumbai",
+		"isTestnet": true,
+		"chainIcon": "/chain-icons/polygon.png",
+		"bridgeFee": "100000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+		"positionManagerContract": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+		"uniswapV3FactoryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+		"quoterV2Contract": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"56": {
+		"chainId": 56,
+		"chainName": "BSC",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/bsc.png",
+		"bridgeFee": "300000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0x13f4EA83D0bd40E75C8222255bc855a974568Dd4",
+		"positionManagerContract": "0x7b8A01B39D58278b5DE7e48c8449c9f4F5170613",
+		"uniswapV3FactoryContract": "0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7",
+		"quoterV2Contract": "0x78D78E420Da98ad378D7799bE8f4AF69033EB077",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0x55d398326f99059fF775485246999027B3197955",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 18
+			},
+			"USDC": {
+				"address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 18
+			}
+		},
+		"liquidityPools": {}
+	},
+	"97": {
+		"chainId": 97,
+		"chainName": "BSC Testnet",
+		"isTestnet": true,
+		"chainIcon": "/chain-icons/bsc.png",
+		"bridgeFee": "100000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0x0000000000000000000000000000000000000000",
+		"positionManagerContract": "0x0000000000000000000000000000000000000000",
+		"uniswapV3FactoryContract": "0x0000000000000000000000000000000000000000",
+		"quoterV2Contract": "0x0000000000000000000000000000000000000000",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 18
+			}
+		},
+		"liquidityPools": {}
+	},
+	"42161": {
+		"chainId": 42161,
+		"chainName": "Arbitrum One",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/arbitrum.png",
+		"bridgeFee": "800000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+		"positionManagerContract": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+		"uniswapV3FactoryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+		"quoterV2Contract": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 6
+			},
+			"USDC": {
+				"address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"421614": {
+		"chainId": 421614,
+		"chainName": "Arbitrum Sepolia",
+		"isTestnet": true,
+		"chainIcon": "/chain-icons/arbitrum.png",
+		"bridgeFee": "100000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0x101F443B4d1b059569D643917553c771E1b9663E",
+		"positionManagerContract": "0xb7402ee99F0A008e461098AC3A27F4957Df89b40",
+		"uniswapV3FactoryContract": "0x248AB79Bbb9bC29bB72f7Cd42F17e054Fc40188e",
+		"quoterV2Contract": "0x2779a0CC1c3e2b2B3a31066Ab3A97BBd8478E15E",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDC": {
+				"address": "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"10": {
+		"chainId": 10,
+		"chainName": "Optimism",
+		"isTestnet": false,
+		"chainIcon": "/chain-icons/optimism.png",
+		"bridgeFee": "600000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+		"positionManagerContract": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+		"uniswapV3FactoryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+		"quoterV2Contract": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDT": {
+				"address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+				"image": "/token-icons/usdt.svg",
+				"name": "Tether USD",
+				"decimals": 6
+			},
+			"USDC": {
+				"address": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
+	},
+	"11155420": {
+		"chainId": 11155420,
+		"chainName": "Optimism Sepolia",
+		"isTestnet": true,
+		"chainIcon": "/chain-icons/optimism.png",
+		"bridgeFee": "100000",
+		"bridgeFactoryContract": "0x0000000000000000000000000000000000000000",
+		"poolSetupContract": "0x0000000000000000000000000000000000000000",
+		"swapRouterContract": "0x94cC0AaC535CCDB3C01d6787D6413C739ae12bc4",
+		"positionManagerContract": "0x27F971cb582BF9E50F397e4d29a5C7A34f11faA2",
+		"uniswapV3FactoryContract": "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
+		"quoterV2Contract": "0xC5290058841028F1614F3A6F0F5816cAd0df5E27",
+		"swapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"simpleSwapBridgeContract": "0x0000000000000000000000000000000000000000",
+		"tokens": {
+			"USDC": {
+				"address": "0x5fd84259d66Cd46123540766Be93DFE6D43130D7",
+				"image": "/token-icons/usdc.png",
+				"name": "USD Coin",
+				"decimals": 6
+			}
+		},
+		"liquidityPools": {}
 	}
 }
