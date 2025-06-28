@@ -1,16 +1,17 @@
 import { useAccount, useChainId, useBalance, useSwitchChain } from 'wagmi'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-// import { Separator } from '@/components/ui/separator'
 import { useTranslation } from '@/contexts/LanguageContext'
-import { Wallet } from 'lucide-react'
+import { Wallet, Copy, RefreshCw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
 const WalletStatus = () => {
 	const { t } = useTranslation()
 	const { address, isConnected, isConnecting } = useAccount()
 	const chainId = useChainId()
 	const { switchChain, chains } = useSwitchChain()
+	const [copied, setCopied] = useState(false)
 
 	const {
 		data: balance,
@@ -22,14 +23,17 @@ const WalletStatus = () => {
 
 	if (!isConnected) {
 		return (
-			<Card className="w-full lotus-card h-fit">
-				<CardContent className="pt-6">
-					<div className="text-center space-y-3">
-						<div>
-							<h3 className="font-medium text-gray-900 mb-2">
+			<Card className="backdrop-blur-md bg-white/80 border-white/20 shadow-lg">
+				<CardContent className="p-6">
+					<div className="flex flex-col items-center space-y-4">
+						<div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+							<Wallet className="w-6 h-6 text-gray-400" />
+						</div>
+						<div className="text-center">
+							<h3 className="font-semibold text-gray-900 mb-1">
 								{t('wallet.status')}
 							</h3>
-							<p className="text-sm text-muted-foreground">
+							<p className="text-sm text-gray-500">
 								{t('wallet.connectToSeeInfo')}
 							</p>
 						</div>
@@ -45,117 +49,93 @@ const WalletStatus = () => {
 
 	const getChainName = (id: number) => {
 		const chainNames: Record<number, string> = {
-			1: 'Ethereum Mainnet',
+			1: 'Ethereum',
 			137: 'Polygon',
 			10: 'Optimism',
-			42161: 'Arbitrum One',
+			42161: 'Arbitrum',
 			8453: 'Base',
-			11155111: 'Sepolia Testnet',
+			11155111: 'Sepolia',
+			84532: 'Base Sepolia',
 		}
 		return chainNames[id] || `Chain ${id}`
 	}
 
+	const copyAddress = async () => {
+		if (address) {
+			await navigator.clipboard.writeText(address)
+			setCopied(true)
+			setTimeout(() => setCopied(false), 2000)
+		}
+	}
+
 	return (
-		<Card className="w-full lotus-card h-fit">
-			<CardHeader className="pb-4">
-				<Wallet size={15} />
-				<CardTitle className="text-center lotus-text-gradient flex items-center justify-center gap-2 text-lg">
-					{t('wallet.status')}
-				</CardTitle>
-			</CardHeader>
-			<CardContent className="space-y-4">
-				<div className="space-y-3">
-					<div className="flex justify-between items-center">
-						<span className="text-xs font-medium text-muted-foreground">
-							{t('wallet.connectionStatus')}:
-						</span>
-						<Badge
-							variant="default"
-							className="bg-green-100 text-green-700 text-xs"
-						>
-							{isConnecting ? t('wallet.connecting') : t('wallet.connected')}
-						</Badge>
-					</div>
-
-					<div className="space-y-1">
-						<span className="text-xs font-medium text-muted-foreground">
-							{t('wallet.address')}:
-						</span>
-						<div className="text-xs font-mono bg-gray-50 p-2 rounded border">
-							{formatAddress(address!)}
+		<Card className="backdrop-blur-md bg-white/80 border-white/20 shadow-lg">
+			<CardContent className="p-6">
+				<div className="flex items-center justify-between mb-6">
+					<div className="flex items-center space-x-3">
+						<div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+							<Wallet className="w-5 h-5 text-green-600" />
+						</div>
+						<div>
+							<h3 className="font-semibold text-gray-900">
+								{t('wallet.status')}
+							</h3>
+							<p className="text-sm text-gray-500">
+								{isConnecting ? t('wallet.connecting') : t('wallet.connected')}
+							</p>
 						</div>
 					</div>
+					<Badge className="bg-green-100 text-green-700 border-green-200">
+						{getChainName(chainId)}
+					</Badge>
+				</div>
 
-					<div className="flex justify-between items-center">
-						<span className="text-xs font-medium text-muted-foreground">
-							{t('wallet.network')}:
-						</span>
-						<Badge
-							variant="secondary"
-							className="bg-pink-100 text-pink-700 text-xs"
-						>
-							{getChainName(chainId)}
-						</Badge>
-					</div>
-
-					<div className="space-y-1">
-						<span className="text-xs font-medium text-muted-foreground">
-							{t('wallet.balance')}:
-						</span>
-						<div className="text-xs font-semibold bg-gray-50 p-2 rounded border">
-							{isBalanceLoading ? (
-								<span className="text-muted-foreground">
-									{t('bridge.loading')}...
-								</span>
-							) : (
-								<span>
-									{balance
-										? `${parseFloat(balance.formatted).toFixed(4)} ${
-												balance.symbol
-										  }`
-										: '0.00 ETH'}
-								</span>
-							)}
+				<div className="space-y-4">
+					{/* Address */}
+					<div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+						<div>
+							<p className="text-xs font-medium text-gray-500 mb-1">
+								{t('wallet.address')}
+							</p>
+							<p className="font-mono text-sm text-gray-900">
+								{formatAddress(address!)}
+							</p>
 						</div>
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={copyAddress}
+							className="h-8 w-8 p-0"
+						>
+							<Copy className={`w-4 h-4 ${copied ? 'text-green-600' : 'text-gray-400'}`} />
+						</Button>
+					</div>
+
+					{/* Balance */}
+					<div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+						<div className="flex-1">
+							<p className="text-xs font-medium text-gray-500 mb-1">
+								{t('wallet.balance')}
+							</p>
+							<p className="font-semibold text-gray-900">
+								{isBalanceLoading ? (
+									<span className="text-gray-400">Loading...</span>
+								) : (
+									`${balance ? parseFloat(balance.formatted).toFixed(4) : '0.0000'} ${balance?.symbol || 'ETH'}`
+								)}
+							</p>
+						</div>
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => refetch()}
+							className="h-8 w-8 p-0"
+							disabled={isBalanceLoading}
+						>
+							<RefreshCw className={`w-4 h-4 text-gray-400 ${isBalanceLoading ? 'animate-spin' : ''}`} />
+						</Button>
 					</div>
 				</div>
-
-				{/* <Separator /> */}
-
-				{/* <div className="space-y-2">
-					<div className="flex justify-between items-center text-xs text-muted-foreground">
-						<span>Chain ID:</span>
-						<span>{chainId}</span>
-					</div>
-				</div>
-
-				<Button
-					onClick={() => refetch()}
-					variant="outline"
-					size="sm"
-					className="w-full text-xs"
-				>
-					{t('wallet.refreshBalance')}
-				</Button> */}
-
-				{/* Network Switching */}
-				{/* <div className="space-y-2">
-					<h4 className="text-xs font-medium">{t('wallet.switchNetwork')}:</h4>
-					<div className="grid grid-cols-1 gap-1">
-						{chains.slice(0, 4).map((chain) => (
-							<Button
-								key={chain.id}
-								onClick={() => switchChain({ chainId: chain.id })}
-								variant={chainId === chain.id ? 'default' : 'outline'}
-								size="sm"
-								className="text-xs h-8 justify-start"
-								disabled={chainId === chain.id}
-							>
-								{chain.name}
-							</Button>
-						))}
-					</div>
-				</div> */}
 			</CardContent>
 		</Card>
 	)
