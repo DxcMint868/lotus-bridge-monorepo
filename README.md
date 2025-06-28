@@ -1,4 +1,4 @@
-# 1Matrix Monorepo
+# Lotus Bridge Monorepo
 
 This monorepo contains the following projects:
 
