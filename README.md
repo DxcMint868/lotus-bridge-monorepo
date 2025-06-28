@@ -14,7 +14,7 @@ Each project has its own README and setup instructions in their respective direc
 ## Project Structure
 
 ```
-1matrix-monorepo/
+lotus-bridge-monorepo/
 ├── bridge-token-custom/     # Bridge token custom implementation
 ├── lotus-bridge-oft/        # Lotus bridge OFT contracts
 ├── lotus-landing-page/      # Lotus landing page
