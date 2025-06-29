@@ -610,9 +610,9 @@ const BridgeInterface = () => {
 								MAX
 							</Button>
 						</div>
-						<div className="text-sm text-gray-500">
+						{/*<div className="text-sm text-gray-500">
 							≈ ${(parseFloat(bridgeState.amount) || 0).toLocaleString()} USD
-						</div>
+						</div>*/}
 
 						{/* Minimum Bridge Amount Validation */}
 						{!isMinAmountLoading &&
