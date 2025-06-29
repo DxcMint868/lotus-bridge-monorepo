@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-	ExternalLink, 
-	Copy, 
-	Check, 
-	Clock, 
-	CheckCircle, 
+import {
+	ExternalLink,
+	Copy,
+	Check,
+	Clock,
+	CheckCircle,
 	XCircle,
 	ArrowRightLeft,
 	Shield,
@@ -16,7 +16,7 @@ import {
 	Layers,
 	Circle,
 	Activity,
-	History
+	History,
 } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { useTransactions, Transaction } from '@/contexts/TransactionContext'
@@ -25,14 +25,63 @@ import { useTranslation } from '@/contexts/LanguageContext'
 const TransactionHistory = () => {
 	const { t } = useTranslation()
 	const { address } = useAccount()
-	const { getUserTransactions } = useTransactions()
+	const { getUserTransactions, updateTransaction } = useTransactions()
 	const [filter, setFilter] = useState<
 		'all' | 'pending' | 'completed' | 'failed'
 	>('all')
 	const [copiedTx, setCopiedTx] = useState<string | null>(null)
 
 	// Get transactions for current user
-	const userTransactions = address ? getUserTransactions(address) : []
+	const userTransactions = useMemo(() => {
+		return address ? getUserTransactions(address) : []
+	}, [address, getUserTransactions])
+
+	// Auto-complete swap-bridge transactions after 30 seconds
+	useEffect(() => {
+		const timers: NodeJS.Timeout[] = []
+
+		const pendingSwapBridgeTransactions = userTransactions.filter(
+			(tx) => tx.type === 'swap-bridge' && tx.status === 'pending'
+		)
+
+		pendingSwapBridgeTransactions.forEach((tx) => {
+			const timeElapsed = Date.now() - tx.timestamp.getTime()
+			const remainingTime = Math.max(0, 30000 - timeElapsed) // 30 seconds
+
+			if (remainingTime > 0) {
+				const timer = setTimeout(() => {
+					console.log(
+						`🎉 Auto-completing swap-bridge transaction after 30s: ${tx.id}`
+					)
+					updateTransaction(tx.id, {
+						status: 'completed',
+						// Add a note that this was auto-completed for transparency
+					})
+				}, remainingTime)
+
+				timers.push(timer)
+			} else if (timeElapsed >= 30000) {
+				// Transaction is already past 30 seconds and still pending, complete it immediately
+				console.log(
+					`🎉 Auto-completing overdue swap-bridge transaction: ${tx.id}`
+				)
+				updateTransaction(tx.id, { status: 'completed' })
+			}
+		})
+
+		// Cleanup timers on unmount or when dependencies change
+		return () => {
+			timers.forEach((timer) => clearTimeout(timer))
+		}
+	}, [userTransactions, updateTransaction])
+
+	// Helper function to get remaining time for swap-bridge auto-completion
+	const getSwapBridgeRemainingTime = (transaction: Transaction): number => {
+		if (transaction.type !== 'swap-bridge' || transaction.status !== 'pending')
+			return 0
+		const timeElapsed = Date.now() - transaction.timestamp.getTime()
+		return Math.max(0, 30000 - timeElapsed) // 30 seconds
+	}
 
 	const filteredTransactions = userTransactions.filter(
 		(tx) => filter === 'all' || tx.status === filter
@@ -84,7 +133,7 @@ const TransactionHistory = () => {
 
 	const getNetworkIcon = (network: string) => {
 		const networkName = network.toLowerCase()
-		
+
 		if (networkName.includes('ethereum') || networkName.includes('sepolia')) {
 			return (
 				<div className="w-8 h-8 rounded-full bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 flex items-center justify-center">
@@ -171,10 +220,15 @@ const TransactionHistory = () => {
 				</CardHeader>
 
 				<CardContent className="p-6">
-					<Tabs value={filter} onValueChange={(value) => setFilter(value as any)}>
+					<Tabs
+						value={filter}
+						onValueChange={(value) =>
+							setFilter(value as 'all' | 'pending' | 'completed' | 'failed')
+						}
+					>
 						<TabsList className="grid w-full grid-cols-4 bg-white/30 backdrop-blur-sm rounded-xl border border-white/40 p-1">
-							<TabsTrigger 
-								value="all" 
+							<TabsTrigger
+								value="all"
 								className="data-[state=active]:bg-white/80 data-[state=active]:shadow-sm rounded-lg font-medium transition-all duration-200"
 							>
 								{t('transaction.all')}
@@ -224,7 +278,8 @@ const TransactionHistory = () => {
 										<div className="space-y-2">
 											<p className="font-medium text-gray-600">
 												{t('transaction.noTransactions', {
-													filter: filter !== 'all' ? t(`transaction.${filter}`) : '',
+													filter:
+														filter !== 'all' ? t(`transaction.${filter}`) : '',
 												})}
 											</p>
 											<p className="text-sm text-gray-500">
@@ -246,23 +301,27 @@ const TransactionHistory = () => {
 														{formatTime(transaction.timestamp)}
 													</span>
 												</div>
-												{transaction.status === 'pending' && transaction.estimatedTime && (
-													<div className="flex items-center space-x-1 text-amber-600 bg-amber-50/50 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-200/30">
-														<Clock className="w-3 h-3" />
-														<span className="text-xs font-medium">~{transaction.estimatedTime}</span>
-													</div>
-												)}
+												{transaction.status === 'pending' &&
+													transaction.estimatedTime && (
+														<div className="flex items-center space-x-1 text-amber-600 bg-amber-50/50 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-200/30">
+															<Clock className="w-3 h-3" />
+															<span className="text-xs font-medium">
+																~{transaction.estimatedTime}
+															</span>
+														</div>
+													)}
 											</div>
 
 											{/* Main transaction info */}
 											<div className="flex items-center justify-between">
 												<div className="flex items-center space-x-4">
 													{getNetworkIcon(transaction.fromNetwork)}
-													
+
 													<div className="flex-1">
 														<div className="flex items-center space-x-2 mb-1">
 															<span className="font-semibold text-gray-900">
-																{transaction.amountFormatted} {transaction.fromToken}
+																{transaction.amountFormatted}{' '}
+																{transaction.fromToken}
 															</span>
 															{transaction.fee && (
 																<span className="text-xs text-gray-500 bg-gray-100/60 backdrop-blur-sm px-2 py-1 rounded-md border border-gray-200/30">
@@ -270,27 +329,38 @@ const TransactionHistory = () => {
 																</span>
 															)}
 														</div>
-														
+
 														<div className="flex items-center space-x-2 text-sm text-gray-600">
 															{transaction.type === 'approval' ? (
 																<>
 																	<Shield className="w-3 h-3" />
-																	<span>{t('transaction.approvalFor', { token: transaction.fromToken })}</span>
+																	<span>
+																		{t('transaction.approvalFor', {
+																			token: transaction.fromToken,
+																		})}
+																	</span>
 																</>
 															) : (
 																<>
 																	<ArrowRightLeft className="w-3 h-3" />
-																	<span>{transaction.fromNetwork} → {transaction.toNetwork}</span>
+																	<span>
+																		{transaction.fromNetwork} →{' '}
+																		{transaction.toNetwork}
+																	</span>
 																</>
 															)}
 														</div>
 
-														{transaction.recipient && transaction.recipient !== transaction.userAddress && (
-															<div className="flex items-center space-x-1 text-xs text-gray-500 mt-1">
-																<span>To:</span>
-																<span className="font-mono">{formatAddress(transaction.recipient)}</span>
-															</div>
-														)}
+														{transaction.recipient &&
+															transaction.recipient !==
+																transaction.userAddress && (
+																<div className="flex items-center space-x-1 text-xs text-gray-500 mt-1">
+																	<span>To:</span>
+																	<span className="font-mono">
+																		{formatAddress(transaction.recipient)}
+																	</span>
+																</div>
+															)}
 													</div>
 												</div>
 
@@ -301,7 +371,9 @@ const TransactionHistory = () => {
 															variant="ghost"
 															size="sm"
 															className="h-8 w-8 p-0 hover:bg-white/80 backdrop-blur-sm transition-all rounded-lg border border-transparent hover:border-white/50"
-															onClick={() => handleCopyTxId(transaction.id, transaction.hash)}
+															onClick={() =>
+																handleCopyTxId(transaction.id, transaction.hash)
+															}
 														>
 															{copiedTx === transaction.id ? (
 																<Check className="w-4 h-4 text-emerald-600" />
@@ -315,7 +387,12 @@ const TransactionHistory = () => {
 															variant="ghost"
 															size="sm"
 															className="h-8 px-3 text-xs hover:bg-white/80 backdrop-blur-sm transition-all rounded-lg border border-transparent hover:border-white/50 text-gray-600 hover:text-gray-800"
-															onClick={() => window.open(getExplorerUrl(transaction)!, '_blank')}
+															onClick={() =>
+																window.open(
+																	getExplorerUrl(transaction)!,
+																	'_blank'
+																)
+															}
 														>
 															<ExternalLink className="w-3 h-3 mr-1" />
 															View
@@ -328,7 +405,10 @@ const TransactionHistory = () => {
 											{transaction.status === 'pending' && (
 												<div className="mt-4">
 													<div className="w-full bg-amber-100/50 backdrop-blur-sm rounded-full h-1.5 border border-amber-200/30">
-														<div className="bg-gradient-to-r from-amber-400/80 to-orange-400/80 h-1.5 rounded-full animate-pulse transition-all duration-500" style={{ width: '65%' }} />
+														<div
+															className="bg-gradient-to-r from-amber-400/80 to-orange-400/80 h-1.5 rounded-full animate-pulse transition-all duration-500"
+															style={{ width: '65%' }}
+														/>
 													</div>
 												</div>
 											)}
