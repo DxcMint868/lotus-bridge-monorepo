@@ -78,6 +78,16 @@ const SWAP_BRIDGE_ABI = [
 		stateMutability: "nonpayable",
 		type: "function",
 	},
+	{
+		inputs: [
+			{ name: "fromToken", type: "string" },
+			{ name: "toToken", type: "string" },
+		],
+		name: "getMockExchangeRate",
+		outputs: [{ name: "", type: "uint256" }],
+		stateMutability: "view",
+		type: "function",
+	},
 ] as const;
 
 // ERC20 ABI for token approval
@@ -238,9 +248,70 @@ export const useSimpleBridge = (
 		currentAllowance < amountIn
 	), [isValidParams, currentAllowance, amountIn]);
 
+	// Read exchange rate from the contract
+	const {
+		data: contractExchangeRate,
+		isLoading: isExchangeRateLoading,
+		error: exchangeRateError,
+	} = useReadContract({
+		address: simpleSwapBridgeContract as Address,
+		abi: SWAP_BRIDGE_ABI,
+		functionName: "getMockExchangeRate",
+		args: params.fromToken && params.toToken ? [params.fromToken, params.toToken] : undefined,
+		query: {
+			enabled: !!(
+				simpleSwapBridgeContract &&
+				params.fromToken &&
+				params.toToken &&
+				params.fromToken !== params.toToken
+			),
+		},
+	});
+
+	// Convert exchange rate from contract (5 decimal places) to decimal
+	const contractExchangeRateDecimal = useMemo(() => {
+		if (!contractExchangeRate) return 1;
+		// Convert from 5 decimal places (e.g., 100000 = 1.0)
+		return Number(contractExchangeRate) / 100000;
+	}, [contractExchangeRate]);
+
+	// Calculate estimated output based on contract exchange rate
+	const estimatedOutputFromContract = useMemo(() => {
+		if (!params.amount || !contractExchangeRateDecimal || parseFloat(params.amount) <= 0) {
+			return "0";
+		}
+		const amountIn = parseFloat(params.amount);
+		const amountOut = amountIn * contractExchangeRateDecimal;
+		return amountOut.toFixed(6);
+	}, [params.amount, contractExchangeRateDecimal]);
+
+	// Use contract data if available, fallback to mock server
+	const finalExchangeRate = contractExchangeRate ? contractExchangeRateDecimal : exchangeRate;
+	const finalEstimatedOutput = contractExchangeRate ? estimatedOutputFromContract : estimatedOutput;
+
+	// Debug logging for exchange rate source
+	useEffect(() => {
+		if (contractExchangeRate) {
+			console.log("📡 Using contract exchange rate:", {
+				fromToken: params.fromToken,
+				toToken: params.toToken,
+				contractRate: contractExchangeRate.toString(),
+				decimalRate: contractExchangeRateDecimal,
+				estimatedOutput: estimatedOutputFromContract,
+			});
+		} else if (exchangeRate !== 1) {
+			console.log("🌐 Using mock server exchange rate:", {
+				fromToken: params.fromToken,
+				toToken: params.toToken,
+				rate: exchangeRate,
+				estimatedOutput: estimatedOutput,
+			});
+		}
+	}, [contractExchangeRate, contractExchangeRateDecimal, estimatedOutputFromContract, exchangeRate, estimatedOutput, params.fromToken, params.toToken]);
+	
 	const fetchMockQuote = useCallback(async () => {
-		// Only fetch if we have valid parameters to prevent infinite loops
-		if (!params.fromToken || !params.toToken || !params.amount || parseFloat(params.amount) <= 0) {
+		// Only fetch if we have valid parameters and no contract exchange rate
+		if (!params.fromToken || !params.toToken || !params.amount || parseFloat(params.amount) <= 0 || contractExchangeRate) {
 			return;
 		}
 		
@@ -257,18 +328,20 @@ export const useSimpleBridge = (
 		} catch (err) {
 			console.error("Failed to fetch mock quote:", err);
 		}
-	}, [params.fromToken, params.toToken, params.amount]);
+	}, [params.fromToken, params.toToken, params.amount, contractExchangeRate]);
 
 	// Get mock quote when params change (with strict validation to prevent loops)
+	// Only fetch if contract exchange rate is not available
 	useEffect(() => {
-		// Only fetch if we have valid params AND the amount is actually different
+		// Only fetch if we have valid params AND the amount is actually different AND no contract rate
 		if (
 			isValidParams && 
 			params.amount && 
 			parseFloat(params.amount) > 0 &&
 			params.fromToken &&
 			params.toToken &&
-			params.fromToken !== params.toToken // Don't fetch for same token
+			params.fromToken !== params.toToken && // Don't fetch for same token
+			!contractExchangeRate // Only fetch if contract rate is not available
 		) {
 			// Throttle API calls to prevent rapid requests
 			const timer = setTimeout(() => {
@@ -276,7 +349,7 @@ export const useSimpleBridge = (
 			}, 1000); // Wait 1 second before making API call
 			return () => clearTimeout(timer);
 		}
-	}, [params.fromToken, params.toToken, params.amount, isValidParams]); // More specific dependencies
+	}, [params.fromToken, params.toToken, params.amount, isValidParams, contractExchangeRate, fetchMockQuote]); // More specific dependencies
 
 	// Refetch allowance after approval (with debouncing)
 	useEffect(() => {
@@ -286,7 +359,7 @@ export const useSimpleBridge = (
 			}, 1000); // Wait 1 second before refetching
 			return () => clearTimeout(timer);
 		}
-	}, [isApprovalSuccess]);
+	}, [isApprovalSuccess, refetchAllowance]);
 
 	const approveToken = useCallback(() => {
 		if (
@@ -331,6 +404,7 @@ export const useSimpleBridge = (
 		writeApproval,
 		fromChain,
 		address,
+		getWagmiChain,
 	]);
 
 	const bridge = useCallback(() => {
@@ -356,7 +430,7 @@ export const useSimpleBridge = (
 		}
 
 		const minAmountOut = parseUnits(
-			(parseFloat(estimatedOutput) * 0.95).toString(),
+			(parseFloat(finalEstimatedOutput) * 0.95).toString(),
 			18
 		); // 5% slippage
 
@@ -391,13 +465,14 @@ export const useSimpleBridge = (
 		fromTokenData,
 		toTokenData,
 		needsApproval,
-		estimatedOutput,
+		finalEstimatedOutput,
 		amountIn,
 		params.toChainKey,
 		recipient,
 		writeBridge,
 		fromChain,
 		address,
+		getWagmiChain,
 	]);
 
 	const reset = useCallback(() => {
@@ -434,8 +509,8 @@ export const useSimpleBridge = (
 		isValidParams,
 
 		// Mock exchange data
-		exchangeRate,
-		estimatedOutput,
+		exchangeRate: finalExchangeRate,
+		estimatedOutput: finalEstimatedOutput,
 		mockQuote,
 	};
 };

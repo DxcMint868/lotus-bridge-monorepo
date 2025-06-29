@@ -124,6 +124,7 @@ const SIMPLE_SWAP_BRIDGE_ABI = [
 	"function getSwapBridgeQuote(address tokenIn, address tokenOut, uint256 amountIn, uint256 targetChain) view returns (uint256, uint256, uint256, bool)",
 	"function addSupportedToken(address token, string symbol)",
 	"function setMockExchangeRate(string fromToken, string toToken, uint256 rate)",
+	"function getMockExchangeRate(string fromToken, string toToken) view returns (uint256)",
 	"function releaseTokens(address token, address recipient, uint256 amount, bytes32 transactionId)",
 	"event SwapBridgeRequested(address indexed user, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 targetChain, address recipient, uint256 minAmountOut, bytes32 transactionId)",
 	"event TokensLocked(address indexed user, address indexed token, uint256 amount, bytes32 indexed transactionId)",
@@ -770,11 +771,12 @@ async function processLockReleaseEvent({
 		// Later we can implement cross-token conversion
 		const destinationTokenSymbol = sourceTokenSymbol;
 
-		// Convert amount using mock exchange rates
-		const convertedAmount = convertTokenAmount(
+		// Convert amount using exchange rates from contract
+		const convertedAmount = await convertTokenAmount(
 			amount,
 			sourceTokenSymbol,
-			destinationTokenSymbol
+			destinationTokenSymbol,
+			11155111 // source chain ID
 		);
 
 		console.log(
@@ -1115,12 +1117,59 @@ const MOCK_EXCHANGE_RATES = {
 	"SLP->VNDC": 0.5, // 1 SLP = 0.5 VNDC
 };
 
-// Get mock exchange rate for token pair
-function getMockExchangeRate(fromToken, toToken) {
+// Get mock exchange rate for token pair from contract
+async function getMockExchangeRate(fromToken, toToken, chainId = 11155111) {
+	try {
+		const network = LOCK_RELEASE_NETWORKS[chainId];
+		if (!network || !network.simpleSwapBridge || network.simpleSwapBridge === "TO_BE_DEPLOYED") {
+			console.log(`⚠️ No SimpleSwapBridge deployed on chain ${chainId}, using fallback rates`);
+			return getFallbackExchangeRate(fromToken, toToken);
+		}
+
+		const contract = new ethers.Contract(
+			network.simpleSwapBridge,
+			SIMPLE_SWAP_BRIDGE_ABI,
+			providers[chainId]
+		);
+
+		console.log(`📞 Getting exchange rate from contract: ${fromToken} -> ${toToken}`);
+		
+		// Call the contract's getMockExchangeRate function
+		const contractRate = await contract.getMockExchangeRate(fromToken, toToken);
+		
+		if (contractRate && contractRate > 0) {
+			// Convert from contract's 5-decimal precision (e.g., 100000 = 1.0)
+			const rate = Number(contractRate) / 100000;
+			console.log(`💱 Contract exchange rate ${fromToken} -> ${toToken}: ${rate} (raw: ${contractRate})`);
+			return rate;
+		} else {
+			console.log(`💱 No rate found in contract for ${fromToken} -> ${toToken}, trying reverse`);
+			
+			// Try reverse direction and invert
+			const reverseRate = await contract.getMockExchangeRate(toToken, fromToken);
+			if (reverseRate && reverseRate > 0) {
+				const rate = 100000 / Number(reverseRate);
+				console.log(`💱 Using inverted contract rate ${toToken} -> ${fromToken}: ${rate} (raw reverse: ${reverseRate})`);
+				return rate;
+			}
+		}
+		
+		console.log(`⚠️ No contract rate found for ${fromToken} -> ${toToken}, using fallback`);
+		return getFallbackExchangeRate(fromToken, toToken);
+		
+	} catch (error) {
+		console.error(`❌ Error getting contract exchange rate:`, error.message);
+		console.log(`⚠️ Using fallback exchange rate for ${fromToken} -> ${toToken}`);
+		return getFallbackExchangeRate(fromToken, toToken);
+	}
+}
+
+// Fallback function using hard-coded rates
+function getFallbackExchangeRate(fromToken, toToken) {
 	const pair = `${fromToken}->${toToken}`;
 	const rate = MOCK_EXCHANGE_RATES[pair];
 
-	console.log(`💱 Mock exchange rate ${pair}: ${rate || "NOT_FOUND"}`);
+	console.log(`💱 Fallback exchange rate ${pair}: ${rate || "NOT_FOUND"}`);
 
 	if (!rate) {
 		// If direct pair not found, try reverse and invert
@@ -1129,7 +1178,7 @@ function getMockExchangeRate(fromToken, toToken) {
 		if (reverseRate) {
 			const invertedRate = 1 / reverseRate;
 			console.log(
-				`💱 Using inverted rate from ${reversePair}: ${invertedRate}`
+				`💱 Using inverted fallback rate from ${reversePair}: ${invertedRate}`
 			);
 			return invertedRate;
 		}
@@ -1138,9 +1187,9 @@ function getMockExchangeRate(fromToken, toToken) {
 	return rate || 1.0; // Default to 1:1 if no rate found
 }
 
-// Convert token amount using mock exchange rates
-function convertTokenAmount(amount, fromToken, toToken) {
-	const rate = getMockExchangeRate(fromToken, toToken);
+// Convert token amount using exchange rates from contract
+async function convertTokenAmount(amount, fromToken, toToken, chainId = 11155111) {
+	const rate = await getMockExchangeRate(fromToken, toToken, chainId);
 	const amountBigInt =
 		typeof amount === "string" ? ethers.parseEther(amount) : amount;
 	const convertedAmount =
@@ -1210,11 +1259,12 @@ async function processSwapBridgeEvent({
 			`💱 Mock cross-token bridge: ${sourceTokenSymbol} -> ${destinationTokenSymbol}`
 		);
 
-		// Convert token amount using mock exchange rates
-		const convertedAmount = convertTokenAmount(
+		// Convert token amount using exchange rates from contract
+		const convertedAmount = await convertTokenAmount(
 			amountIn,
 			sourceTokenSymbol,
-			destinationTokenSymbol
+			destinationTokenSymbol,
+			11155111 // source chain ID
 		);
 
 		// Find destination token address
@@ -1369,17 +1419,18 @@ async function processSimpleSwapBridgeEvent({
 			`💱 Simple cross-token bridge: ${sourceTokenSymbol} -> ${destinationTokenSymbol}`
 		);
 
-		// Convert token amount using mock exchange rates (1:1 for VNST <-> VNDC)
+		// Convert token amount using exchange rates from contract (1:1 for VNST <-> VNDC)
 		const convertedAmount =
 			sourceTokenSymbol === "VNST" && destinationTokenSymbol === "VNDC"
 				? amountIn // 1:1 rate for VNST to VNDC
 				: destinationTokenSymbol === "VNST" &&
 				  sourceTokenSymbol === "VNDC"
 				? amountIn // 1:1 rate for VNDC to VNST
-				: convertTokenAmount(
+				: await convertTokenAmount(
 						amountIn,
 						sourceTokenSymbol,
-						destinationTokenSymbol
+						destinationTokenSymbol,
+						sourceChainId
 				  );
 
 		// Find destination token address
@@ -1489,16 +1540,44 @@ app.get("/api/status", (req, res) =>
 	})
 );
 
-// Get mock exchange rates
-app.get("/api/exchange-rates", (req, res) => {
-	res.json({
-		rates: MOCK_EXCHANGE_RATES,
-		description: "Mock exchange rates for cross-token bridge demo",
-	});
+// Get exchange rates (both contract and fallback)
+app.get("/api/exchange-rates", async (req, res) => {
+	try {
+		// Try to get some common rates from contract
+		const contractRates = {};
+		const commonPairs = [
+			["VNST", "VNDC"],
+			["VNDC", "VNST"],
+			["VNST", "AXS"],
+			["AXS", "VNST"],
+			["VNST", "SLP"],
+			["SLP", "VNST"],
+		];
+
+		for (const [from, to] of commonPairs) {
+			try {
+				const rate = await getMockExchangeRate(from, to);
+				contractRates[`${from}->${to}`] = rate;
+			} catch (err) {
+				console.error(`Failed to get rate ${from}->${to}:`, err.message);
+			}
+		}
+
+		res.json({
+			contractRates,
+			fallbackRates: MOCK_EXCHANGE_RATES,
+			description: "Exchange rates from contract with fallback rates for demo",
+		});
+	} catch (error) {
+		res.status(500).json({ 
+			error: error.message,
+			fallbackRates: MOCK_EXCHANGE_RATES 
+		});
+	}
 });
 
 // Get mock quote for token conversion
-app.get("/api/quote/:fromToken/:toToken/:amount", (req, res) => {
+app.get("/api/quote/:fromToken/:toToken/:amount", async (req, res) => {
 	try {
 		const { fromToken, toToken, amount } = req.params;
 
@@ -1508,9 +1587,9 @@ app.get("/api/quote/:fromToken/:toToken/:amount", (req, res) => {
 				.json({ error: "Missing required parameters" });
 		}
 
-		const rate = getMockExchangeRate(fromToken, toToken);
+		const rate = await getMockExchangeRate(fromToken, toToken);
 		const amountIn = ethers.parseEther(amount);
-		const amountOut = convertTokenAmount(amountIn, fromToken, toToken);
+		const amountOut = await convertTokenAmount(amountIn, fromToken, toToken);
 
 		res.json({
 			fromToken,
@@ -1545,9 +1624,9 @@ app.post("/api/simulate-bridge", async (req, res) => {
 				.json({ error: "Missing required parameters" });
 		}
 
-		const rate = getMockExchangeRate(fromToken, toToken);
+		const rate = await getMockExchangeRate(fromToken, toToken);
 		const amountIn = ethers.parseEther(amount);
-		const amountOut = convertTokenAmount(amountIn, fromToken, toToken);
+		const amountOut = await convertTokenAmount(amountIn, fromToken, toToken);
 		const mockTxId = ethers.keccak256(
 			ethers.toUtf8Bytes(`${Date.now()}-${Math.random()}`)
 		);
